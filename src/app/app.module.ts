@@ -8,23 +8,27 @@ import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddTutorialComponent } from './components/add-tutorial/add-tutorial.component';
-import { TutorialDetailsComponent } from './components/tutorial-details/tutorial-details.component';
-import { TutorialsListComponent } from './components/tutorials-list/tutorials-list.component';
+// import { AddTutorialComponent } from './components/add-tutorial/add-tutorial.component';
+// import { TutorialDetailsComponent } from './components/tutorial-details/tutorial-details.component';
+// import { TutorialsListComponent } from './components/tutorials-list/tutorials-list.component';
+// import { ToOrderTableComponent } from './components/to-order-table/to-order-table.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddTutorialComponent,
-    TutorialDetailsComponent,
-    TutorialsListComponent
+    // AddTutorialComponent,
+    // TutorialDetailsComponent,
+    // TutorialsListComponent,
+    // ToOrderTableComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule, // for firestore
+    AngularFirestoreModule,
+    BrowserAnimationsModule, // for firestore
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { TutorialsListComponent } from './components/tutorials-list/tutorials-list.component';
-import { AddTutorialComponent } from './components/add-tutorial/add-tutorial.component';
+import {ToOrderTableComponent} from "src/app/components/to-order-table/to-order-table.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'tutorials', pathMatch: 'full' },
-  { path: 'tutorials', component: TutorialsListComponent },
-  { path: 'add', component: AddTutorialComponent }
+  { path: 'tutorials', component: ToOrderTableComponent },
+  // { path: 'add', component: AddTutorialComponent }
 ];
 
 @NgModule({
