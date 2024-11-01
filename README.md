@@ -49,4 +49,4 @@ Fullstack with Django:
 
 > [Angular + Django + PostgreSQL](https://www.bezkoder.com/django-angular-postgresql/)
 
-> [Angular + Django + MongoDB](https://www.bezkoder.com/django-angular-mongodb/)
+> [Angular + Django + MongoDB](https://www.bezkoder.com/django-angular-mongodb/)# pd-store
