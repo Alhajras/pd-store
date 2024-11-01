@@ -1,31 +1,39 @@
-<button mat-raised-button color="primary" (click)="openDialog(dialogTemplate)">Open Dialog</button>
+<button mat-raised-button color="primary" (click)="openDialog(dialogTemplate)">New Order</button>
+
+<ng-template #confirmationDialog>
+  <div class="confirmation-container">
+    <p>Are you sure you want to delete this item?</p>
+    <button mat-raised-button color="accent" (click)="cancelDelete()">Cancel</button>
+    <button mat-raised-button color="warn" (click)="confirmDelete()">Delete</button>
+  </div>
+</ng-template>
 
 <ng-template #dialogTemplate>
   <h2 mat-dialog-title>Add Order</h2>
   <mat-dialog-content>
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
-      <input matInput [(ngModel)]="orderData.name" />
+      <input matInput [(ngModel)]="orderData.name"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Price</mat-label>
-      <input matInput type="number" [(ngModel)]="orderData.price" />
+      <input matInput type="number" [(ngModel)]="orderData.price"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Quantity</mat-label>
-      <input matInput type="number" [(ngModel)]="orderData.quantity" />
+      <input matInput type="number" [(ngModel)]="orderData.quantity"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Link</mat-label>
-      <input matInput [(ngModel)]="orderData.link" />
+      <input matInput [(ngModel)]="orderData.link"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Variant</mat-label>
-      <input matInput [(ngModel)]="orderData.variant" />
+      <input matInput [(ngModel)]="orderData.variant"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
@@ -49,38 +57,49 @@
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-      <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
+      <td mat-cell *matCellDef="let row"> {{ row.id }}</td>
     </ng-container>
 
     <!-- Quantity Column -->
     <ng-container matColumnDef="quantity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
-      <td mat-cell *matCellDef="let row"> {{row.quantity}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity</th>
+      <td mat-cell *matCellDef="let row"> {{ row.quantity }}</td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-      <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
+      <td mat-cell *matCellDef="let row"> {{ row.name }}</td>
     </ng-container>
 
     <!-- Link Column -->
     <ng-container matColumnDef="link">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Link </th>
-      <td mat-cell *matCellDef="let row"> {{row.link}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Link</th>
+      <td mat-cell *matCellDef="let row"> {{ row.link }}</td>
     </ng-container>
 
     <!-- Variant Column -->
     <ng-container matColumnDef="variant">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant </th>
-      <td mat-cell *matCellDef="let row"> {{row.variant}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant</th>
+      <td mat-cell *matCellDef="let row"> {{ row.variant }}</td>
     </ng-container>
 
     <!-- Price Column -->
     <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
-      <td mat-cell *matCellDef="let row"> {{row.price}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Price</th>
+      <td mat-cell *matCellDef="let row"> {{ row.price }}</td>
+    </ng-container>
+
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-raised-button color="warn" (click)="openDeleteConfirmation($event)">
+         Delete
+        </button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -88,7 +107,7 @@
 
     <!-- Row shown when there is no matching data. -->
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
     </tr>
   </table>
 

@@ -10,3 +10,15 @@ table {
 td, th {
   width: 25%;
 }
+
+
+.confirmation-container {
+  padding: 20px;
+  background: white;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.confirmation-container p {
+  margin: 0 0 16px;
+}

@@ -1,4 +1,4 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
@@ -9,6 +9,9 @@ import {map} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
+import {Overlay, OverlayRef} from "@angular/cdk/overlay";
+import {TemplatePortal} from "@angular/cdk/portal";
+import {MatIconModule} from "@angular/material/icon";
 
 export interface ToOrder {
   id: string;
@@ -37,20 +40,66 @@ export interface OrderData {
   templateUrl: './to-order-table.component.html',
   styleUrls: ['./to-order-table.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule],
 })
 export class ToOrderTableComponent {
-  displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'variant', 'link'];
+  displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'variant', 'link', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: ''};
+  private overlayRef: OverlayRef | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
 
   constructor(private tutorialService: TutorialService,
               public dialog: MatDialog,
+              private viewContainerRef: ViewContainerRef,
+              private overlay: Overlay,
   ) {
     this.retrieveTutorials()
+  }
+
+  openDeleteConfirmation(event: MouseEvent) {
+    // If an overlay is already open, close it
+    if (this.overlayRef) {
+      this.overlayRef.dispose();
+    }
+
+    const positionStrategy = this.overlay.position()
+      .flexibleConnectedTo({ x: event.clientX, y: event.clientY })
+      .withPositions([
+        {
+          originX: 'center',
+          originY: 'top',
+          overlayX: 'center',
+          overlayY: 'bottom',
+          offsetY: -10,
+        }
+      ]);
+
+    // Create overlay configuration
+    this.overlayRef = this.overlay.create({
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-dark-backdrop',
+      positionStrategy: positionStrategy
+    });
+
+    // Attach the template portal to the overlay
+    const portal = new TemplatePortal(this.confirmationDialog, this.viewContainerRef);
+    this.overlayRef.attach(portal);
+
+    // Close the overlay when backdrop is clicked
+    this.overlayRef.backdropClick().subscribe(() => this.overlayRef?.dispose());
+  }
+
+  confirmDelete() {
+    console.log('Item deleted');
+    this.overlayRef?.dispose();
+  }
+
+  cancelDelete() {
+    this.overlayRef?.dispose();
   }
 
   openDialog(templateRef: TemplateRef<any>): void {
