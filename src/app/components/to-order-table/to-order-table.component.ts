@@ -101,7 +101,10 @@ this.retrieveTutorials()
   }
 
   onAdd(): void {
-this.dialog.closeAll()
+    this.tutorialService.create(this.orderData).then(() => {
+      console.log('Created new item successfully!');
+    this.dialog.closeAll()
+    });
 
   }
 
