@@ -13,16 +13,12 @@ import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
 
-export interface ToOrder {
-  id: string;
-  name: string;
-  quantity: string;
-  link: string;
-  variant: string;
-  price: string;
+function cloneExcludingField<T, K extends keyof T>(obj: T, fieldToExclude: K): Omit<T, K> {
+  const {[fieldToExclude]: _, ...clonedObj} = obj;
+  return clonedObj;
 }
 
-export interface OrderData {
+interface BaseOrderInfo {
   name: string;
   price: number;
   quantity: number;
@@ -30,6 +26,13 @@ export interface OrderData {
   variant: string;
   notes: string;
 }
+
+export interface ToOrder extends BaseOrderInfo {
+  id: string;
+}
+
+export interface OrderData extends BaseOrderInfo {}
+
 
 
 /**
@@ -51,6 +54,7 @@ export class ToOrderTableComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
+  public orderToEdit: ToOrder | null = null;
 
   constructor(private tutorialService: TutorialService,
               public dialog: MatDialog,
@@ -121,9 +125,26 @@ export class ToOrderTableComponent {
   }
 
   onAdd(): void {
-    this.tutorialService.create(this.orderData).then(() => {
-      this.dialog.closeAll()
-    });
+    if (this.orderToEdit === null) {
+      this.tutorialService.create(this.orderData).then(() => {
+        this.dialog.closeAll()
+      });
+    } else {
+
+      let editedOrder: OrderData = {
+        link: this.orderToEdit.link,
+        notes: this.orderToEdit.notes,
+        price: this.orderToEdit.price,
+        variant: this.orderToEdit.variant,
+        quantity: this.orderToEdit.quantity,
+        name: this.orderToEdit.name
+      }
+      this.tutorialService.update(this.orderToEdit.id, editedOrder).then(() => {
+        this.orderToEdit = null
+        this.dialog.closeAll()
+      });
+
+    }
 
   }
 
@@ -155,6 +176,11 @@ export class ToOrderTableComponent {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+  }
+
+  openEditDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
+    this.orderToEdit = {...row}
+    this.openDialog(dialogTemplate)
   }
 }
 
