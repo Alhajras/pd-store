@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { Tutorial } from '../models/tutorial.model';
 import {OrderData} from "src/app/components/to-order-table/to-order-table.component";
 
 @Injectable({
