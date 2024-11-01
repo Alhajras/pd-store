@@ -47,7 +47,7 @@ export class ToOrderTableComponent {
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: ''};
   private overlayRef: OverlayRef | null = null;
-
+  private orderToDelete: ToOrder | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
@@ -60,14 +60,16 @@ export class ToOrderTableComponent {
     this.retrieveTutorials()
   }
 
-  openDeleteConfirmation(event: MouseEvent) {
+  openDeleteConfirmation(event: MouseEvent, row: ToOrder) {
     // If an overlay is already open, close it
     if (this.overlayRef) {
       this.overlayRef.dispose();
     }
 
+    this.orderToDelete = row
+
     const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo({ x: event.clientX, y: event.clientY })
+      .flexibleConnectedTo({x: event.clientX, y: event.clientY})
       .withPositions([
         {
           originX: 'center',
@@ -94,8 +96,11 @@ export class ToOrderTableComponent {
   }
 
   confirmDelete() {
-    console.log('Item deleted');
-    this.overlayRef?.dispose();
+    if (this.orderToDelete !== null) {
+      this.tutorialService.delete(this.orderToDelete.id).then(() => {
+        this.overlayRef?.dispose();
+      });
+    }
   }
 
   cancelDelete() {
