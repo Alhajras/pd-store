@@ -6,7 +6,7 @@ import { Tutorial } from '../models/tutorial.model';
   providedIn: 'root'
 })
 export class TutorialService {
-  private dbPath = '/tutorials';
+  private dbPath = '/orders';
 
   tutorialsRef: AngularFirestoreCollection<Tutorial>;
 
