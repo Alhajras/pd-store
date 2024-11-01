@@ -14,6 +14,8 @@ export interface ToOrder {
   id: string;
   name: string;
   quantity: string;
+  link: string;
+  variant: string;
   price: string;
 }
 
@@ -38,7 +40,7 @@ export interface OrderData {
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule],
 })
 export class ToOrderTableComponent {
-  displayedColumns: string[] = ['id', 'name', 'price', 'quantity'];
+  displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'variant', 'link'];
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: ''};
 
