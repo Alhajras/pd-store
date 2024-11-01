@@ -4,7 +4,7 @@ import {ToOrderTableComponent} from "src/app/components/to-order-table/to-order-
 
 const routes: Routes = [
   { path: '', redirectTo: 'tutorials', pathMatch: 'full' },
-  { path: 'tutorials', component: ToOrderTableComponent },
+  { path: 'to-orders', component: ToOrderTableComponent },
   // { path: 'add', component: AddTutorialComponent }
 ];
 

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Angular 16 Firestore CRUD';
+  title = 'Pixie Dust Dashboard';
 }
