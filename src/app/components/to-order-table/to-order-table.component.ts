@@ -47,7 +47,7 @@ export interface OrderData extends BaseOrderInfo {}
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe],
 })
 export class ToOrderTableComponent {
-  displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'variant', 'link', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'variant', 'link', 'notes', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: ''};
   private overlayRef: OverlayRef | null = null;
