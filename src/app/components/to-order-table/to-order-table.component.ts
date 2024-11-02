@@ -12,6 +12,7 @@ import {FormsModule} from "@angular/forms";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
+import {SlicePipe} from "@angular/common";
 
 function cloneExcludingField<T, K extends keyof T>(obj: T, fieldToExclude: K): Omit<T, K> {
   const {[fieldToExclude]: _, ...clonedObj} = obj;
@@ -43,7 +44,7 @@ export interface OrderData extends BaseOrderInfo {}
   templateUrl: './to-order-table.component.html',
   styleUrls: ['./to-order-table.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe],
 })
 export class ToOrderTableComponent {
   displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'variant', 'link', 'actions'];
