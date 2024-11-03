@@ -14,6 +14,7 @@ import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
 import {SlicePipe} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
+import {MatSelectModule} from "@angular/material/select";
 
 function cloneExcludingField<T, K extends keyof T>(obj: T, fieldToExclude: K): Omit<T, K> {
   const {[fieldToExclude]: _, ...clonedObj} = obj;
@@ -27,6 +28,7 @@ interface BaseOrderInfo {
   link: string;
   variant: string;
   notes: string;
+  status: string;
   image: string;
 }
 
@@ -45,12 +47,12 @@ export type OrderData = BaseOrderInfo
   templateUrl: './to-order-table.component.html',
   styleUrls: ['./to-order-table.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule],
 })
 export class ToOrderTableComponent {
-  displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'notes', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
-  orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: ''};
+  orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: '', status: 'new'};
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: ToOrder | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -164,7 +166,8 @@ export class ToOrderTableComponent {
         variant: this.orderToEdit.variant,
         quantity: this.orderToEdit.quantity,
         name: this.orderToEdit.name,
-        image: this.orderToEdit.image
+        image: this.orderToEdit.image,
+        status: this.orderToEdit.status
       }
       this.tutorialService.update(this.orderToEdit.id, editedOrder).then(() => {
         this.orderToEdit = null
@@ -208,6 +211,12 @@ export class ToOrderTableComponent {
   openEditDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
     this.orderToEdit = {...row}
     this.openDialog(dialogTemplate)
+  }
+
+  changeOrderStatus(newStatus: any, order: ToOrder) {
+    this.orderToEdit = order
+    this.orderToEdit.status = newStatus
+    this.onAdd()
   }
 }
 

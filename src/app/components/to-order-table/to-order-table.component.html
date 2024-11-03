@@ -108,6 +108,20 @@
       <td mat-cell *matCellDef="let row"> {{ row.notes }}</td>
     </ng-container>
 
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-form-field appearance="outline" class="status-dropdown">
+        <mat-select (valueChange)="changeOrderStatus($event, row)" [(value)]="row.status">
+          <mat-option value="new">New</mat-option>
+          <mat-option value="ordered">Ordered</mat-option>
+          <mat-option value="home">Home</mat-option>
+          <mat-option value="libya">Libya</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+  </ng-container>
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
@@ -116,7 +130,7 @@
         <button mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
           Edit
         </button>
-        <button mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
+        <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
           Delete
         </button>
       </td>
