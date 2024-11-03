@@ -32,6 +32,11 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
+      <mat-label>PD Link</mat-label>
+      <input matInput [(ngModel)]=" orderData.pdLink"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
       <mat-label>Variant</mat-label>
       <input matInput [(ngModel)]="orderData.variant"/>
     </mat-form-field>
@@ -86,6 +91,15 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Link</th>
       <td mat-cell *matCellDef="let row">
         <a [href]="row.link" target="_blank">{{ row.link | slice:0:25 }}...</a>
+
+      </td>
+    </ng-container>
+
+    <!-- PD Link Column -->
+    <ng-container matColumnDef="pdLink">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> PD Link</th>
+      <td mat-cell *matCellDef="let row">
+        <a [href]="row.pdLink" target="_blank">{{ row.pdLink | slice:0:25 }}...</a>
 
       </td>
     </ng-container>

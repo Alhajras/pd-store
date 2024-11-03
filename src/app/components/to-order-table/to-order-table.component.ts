@@ -30,6 +30,7 @@ interface BaseOrderInfo {
   notes: string;
   status: string;
   image: string;
+  pdLink: string;
   createdTime: string;
 }
 
@@ -51,9 +52,9 @@ export type OrderData = BaseOrderInfo
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule],
 })
 export class ToOrderTableComponent {
-  displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'notes', 'status', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'pdLink', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
-  orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: '', status: 'new', createdTime: ''};
+  orderData: OrderData = {name: '', price: 0, quantity: 1, link: '', pdLink: '', variant: '', notes: '', image: '', status: 'new', createdTime: ''};
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: ToOrder | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -166,7 +167,7 @@ export class ToOrderTableComponent {
       });
 
     }
-      this.orderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: '', status: 'new', createdTime: ''};
+      this.orderData = {name: '', price: 0, quantity: 1, link: '', pdLink: '',  variant: '', notes: '', image: '', status: 'new', createdTime: ''};
   }
 
   onCancel(): void {
