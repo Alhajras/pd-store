@@ -7,6 +7,11 @@ table {
   width: 100%;
 }
 
+.image-preview{
+  width: 8rem;
+  height: 8rem;
+}
+
 .confirmation-container {
   padding: 20px;
   background: white;

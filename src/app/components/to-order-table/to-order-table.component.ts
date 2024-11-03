@@ -5,7 +5,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {TutorialService} from "src/app/services/tutorial.service";
-import {map} from "rxjs";
+import {finalize, map} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
@@ -13,6 +13,7 @@ import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
 import {SlicePipe} from "@angular/common";
+import {AngularFireStorage} from "@angular/fire/compat/storage";
 
 function cloneExcludingField<T, K extends keyof T>(obj: T, fieldToExclude: K): Omit<T, K> {
   const {[fieldToExclude]: _, ...clonedObj} = obj;
@@ -26,14 +27,15 @@ interface BaseOrderInfo {
   link: string;
   variant: string;
   notes: string;
+  image: string;
 }
 
 export interface ToOrder extends BaseOrderInfo {
   id: string;
 }
 
-export interface OrderData extends BaseOrderInfo {}
-
+export interface OrderData extends BaseOrderInfo {
+}
 
 
 /**
@@ -47,22 +49,46 @@ export interface OrderData extends BaseOrderInfo {}
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe],
 })
 export class ToOrderTableComponent {
-  displayedColumns: string[] = ['id', 'name', 'price', 'quantity', 'variant', 'link', 'notes', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'notes', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
-  orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: ''};
+  orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: ''};
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: ToOrder | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
   public orderToEdit: ToOrder | null = null;
+  public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
+
 
   constructor(private tutorialService: TutorialService,
               public dialog: MatDialog,
+              private storage: AngularFireStorage,
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
   ) {
     this.retrieveTutorials()
+  }
+
+
+  uploadFile(event: any, row: ToOrder) {
+    const file = event.target.files[0];
+    const filePath = `uploads/${file.name}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+
+    task
+      .snapshotChanges()
+      .pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe((url) => {
+            row.image = url
+            this.orderToEdit = row
+            this.onAdd()
+          });
+        })
+      )
+      .subscribe();
   }
 
   openDeleteConfirmation(event: MouseEvent, row: ToOrder) {
@@ -138,7 +164,8 @@ export class ToOrderTableComponent {
         price: this.orderToEdit.price,
         variant: this.orderToEdit.variant,
         quantity: this.orderToEdit.quantity,
-        name: this.orderToEdit.name
+        name: this.orderToEdit.name,
+        image: this.orderToEdit.image
       }
       this.tutorialService.update(this.orderToEdit.id, editedOrder).then(() => {
         this.orderToEdit = null
