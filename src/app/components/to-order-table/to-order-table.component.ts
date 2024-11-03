@@ -30,6 +30,7 @@ interface BaseOrderInfo {
   notes: string;
   status: string;
   image: string;
+  createdTime: string;
 }
 
 export interface ToOrder extends BaseOrderInfo {
@@ -52,13 +53,13 @@ export type OrderData = BaseOrderInfo
 export class ToOrderTableComponent {
   displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
-  orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: '', status: 'new'};
+  orderData: OrderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: '', status: 'new', createdTime: ''};
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: ToOrder | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
-  public orderToEdit: ToOrder | null = null;
+  public orderToEditId: string | null = null;
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
 
 
@@ -84,7 +85,7 @@ export class ToOrderTableComponent {
         finalize(() => {
           fileRef.getDownloadURL().subscribe((url) => {
             row.image = url
-            this.orderToEdit = row
+            this.orderData = row
             this.onAdd()
           });
         })
@@ -141,7 +142,7 @@ export class ToOrderTableComponent {
 
   openDialog(templateRef: TemplateRef<any>): void {
     const dialogRef = this.dialog.open(templateRef, {
-      width: '400px',
+      width: '50rem',
       data: {...this.orderData},
     });
 
@@ -153,28 +154,20 @@ export class ToOrderTableComponent {
   }
 
   onAdd(): void {
-    if (this.orderToEdit === null) {
+    if (this.orderToEditId === null) {
+      this.orderData.createdTime = new Date().toString()
       this.tutorialService.create(this.orderData).then(() => {
         this.dialog.closeAll()
       });
     } else {
-
-      const editedOrder: OrderData = {
-        link: this.orderToEdit.link,
-        notes: this.orderToEdit.notes,
-        price: this.orderToEdit.price,
-        variant: this.orderToEdit.variant,
-        quantity: this.orderToEdit.quantity,
-        name: this.orderToEdit.name,
-        image: this.orderToEdit.image,
-        status: this.orderToEdit.status
-      }
-      this.tutorialService.update(this.orderToEdit.id, editedOrder).then(() => {
-        this.orderToEdit = null
+      this.tutorialService.update(this.orderToEditId, this.orderData).then(() => {
+        this.orderToEditId = null
         this.dialog.closeAll()
       });
 
     }
+      this.orderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: '', status: 'new', createdTime: ''};
+
 
   }
 
@@ -209,13 +202,15 @@ export class ToOrderTableComponent {
   }
 
   openEditDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
-    this.orderToEdit = {...row}
+    this.orderToEditId = row.id
+    this.orderData = {...row}
     this.openDialog(dialogTemplate)
   }
 
   changeOrderStatus(newStatus: any, order: ToOrder) {
-    this.orderToEdit = order
-    this.orderToEdit.status = newStatus
+    this.orderData = order
+    this.orderData.status = newStatus
+    this.orderToEditId = order.id
     this.onAdd()
   }
 }

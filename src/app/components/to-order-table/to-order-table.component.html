@@ -13,37 +13,37 @@
   <mat-dialog-content>
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
-      <input matInput [(ngModel)]="orderToEdit === null ? orderData.name : orderToEdit.name"/>
+      <input matInput [(ngModel)]="orderData.name"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Price</mat-label>
-      <input matInput type="number" [(ngModel)]="orderToEdit === null ? orderData.price : orderToEdit.price"/>
+      <input matInput type="number" [(ngModel)]="orderData.price"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Quantity</mat-label>
-      <input matInput type="number" [(ngModel)]="orderToEdit === null ?  orderData.quantity : orderToEdit.quantity"/>
+      <input matInput type="number" [(ngModel)]="orderData.quantity"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Link</mat-label>
-      <input matInput [(ngModel)]="orderToEdit === null ?  orderData.link : orderToEdit.link"/>
+      <input matInput [(ngModel)]=" orderData.link"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Variant</mat-label>
-      <input matInput [(ngModel)]="orderToEdit === null ?  orderData.variant: orderToEdit.variant"/>
+      <input matInput [(ngModel)]="orderData.variant"/>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Notes</mat-label>
-      <textarea matInput [(ngModel)]="orderToEdit === null ?  orderData.notes : orderToEdit.notes"></textarea>
+      <textarea matInput [(ngModel)]="orderData.notes"></textarea>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button (click)="onCancel()">Cancel</button>
-    <button mat-button color="primary" (click)="onAdd()">{{ orderToEdit === null ? 'Add' : 'Edit' }}</button>
+    <button mat-button color="primary" (click)="onAdd()">{{ orderToEditId === null ? 'Add' : 'Edit' }}</button>
   </mat-dialog-actions>
 </ng-template>
 
