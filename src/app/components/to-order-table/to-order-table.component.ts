@@ -34,8 +34,7 @@ export interface ToOrder extends BaseOrderInfo {
   id: string;
 }
 
-export interface OrderData extends BaseOrderInfo {
-}
+export type OrderData = BaseOrderInfo
 
 
 /**
@@ -158,7 +157,7 @@ export class ToOrderTableComponent {
       });
     } else {
 
-      let editedOrder: OrderData = {
+      const editedOrder: OrderData = {
         link: this.orderToEdit.link,
         notes: this.orderToEdit.notes,
         price: this.orderToEdit.price,

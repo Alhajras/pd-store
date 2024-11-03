@@ -59,7 +59,7 @@
     <ng-container matColumnDef="image">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Image</th>
       <td mat-cell *matCellDef="let row">
-        <img class="image-preview" [src]="row.image ?  row.image : defaultImage"/>
+        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
 
         <div>
           <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="uploadFile($event, row)"
