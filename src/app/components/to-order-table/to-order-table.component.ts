@@ -167,8 +167,6 @@ export class ToOrderTableComponent {
 
     }
       this.orderData = {name: '', price: 0, quantity: 0, link: '', variant: '', notes: '', image: '', status: 'new', createdTime: ''};
-
-
   }
 
   onCancel(): void {
