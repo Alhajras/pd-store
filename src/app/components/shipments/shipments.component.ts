@@ -12,11 +12,12 @@ import {FormsModule} from "@angular/forms";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
-import {SlicePipe} from "@angular/common";
+import {NgForOf, SlicePipe} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import {BaseShipment} from "src/app/services/shipment.service";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 export type ShipmentData = BaseShipment
 
@@ -28,11 +29,10 @@ export type ShipmentData = BaseShipment
   templateUrl: './shipments.component.html',
   styleUrls: ['./shipments.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, MatExpansionModule, NgForOf],
 })
 export class ShipmentsComponent {
-  displayedColumns: string[] = ['image', 'aramixId', 'internalId', 'numberOfItems', 'totalPrice', 'notes', 'status', 'actions'];
-  dataSource!: MatTableDataSource<Shipment>;
+  shipments: Shipment[] = []
   orderData: ShipmentData = {
     image: '',
     aramixId: 0,
@@ -176,15 +176,6 @@ export class ShipmentsComponent {
     this.dialog.closeAll()
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
   public retrieveTutorials(): void {
     this.shipmentService.getAll().snapshotChanges().pipe(
       map(changes =>
@@ -194,11 +185,7 @@ export class ShipmentsComponent {
       )
     ).subscribe(data => {
       const orders: any[] = data
-
-      // Assign the data to the data source for the table to render
-      this.dataSource = new MatTableDataSource(orders);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.shipments = orders
     });
   }
 

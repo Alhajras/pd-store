@@ -22,3 +22,8 @@ table {
 .confirmation-container p {
   margin: 0 0 16px;
 }
+
+
+mat-expansion-panel-header {
+  height: 10rem;
+}
