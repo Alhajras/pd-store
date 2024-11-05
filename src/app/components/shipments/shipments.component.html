@@ -1,0 +1,126 @@
+<button class="mb-2" mat-raised-button color="primary" (click)="openDialog(dialogTemplate)">New Shipment</button>
+
+<ng-template #confirmationDialog>
+  <div class="confirmation-container">
+    <p>Are you sure you want to delete this item?</p>
+    <button mat-raised-button color="accent" (click)="cancelDelete()">Cancel</button>
+    <button mat-raised-button color="warn" (click)="confirmDelete()">Delete</button>
+  </div>
+</ng-template>
+
+<ng-template #dialogTemplate>
+  <h2 mat-dialog-title>Add Shipment</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Aramix Id</mat-label>
+      <input matInput [(ngModel)]="orderData.aramixId"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Internal Id</mat-label>
+      <input matInput type="number" [(ngModel)]="orderData.internalId"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Notes</mat-label>
+      <textarea matInput [(ngModel)]="orderData.notes"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onAdd()">{{ orderToEditId === null ? 'Add' : 'Edit' }}</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. perfume" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Image</th>
+      <td mat-cell *matCellDef="let row">
+        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
+
+        <div>
+          <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="uploadFile($event, row)"
+                 accept=".png, .JPEG"/>
+          <button class="ml-4 mt-1 mb-1" mat-flat-button color="primary" (click)="csvInput.click()">Upload</button>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Quantity Column -->
+    <ng-container matColumnDef="aramixId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Aramix Id</th>
+      <td mat-cell *matCellDef="let row"> {{ row.aramixId }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="internalId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Internal Id</th>
+      <td mat-cell *matCellDef="let row"> {{ row.internalId }}</td>
+    </ng-container>
+
+    <!-- PD Link Column -->
+    <ng-container matColumnDef="numberOfItems">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> numberOfItems</th>
+      <td mat-cell *matCellDef="let row"> {{ row.numberOfItems }}</td>
+    </ng-container>
+
+    <!-- Variant Column -->
+    <ng-container matColumnDef="totalPrice">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> totalPrice</th>
+      <td mat-cell *matCellDef="let row"> {{ row.totalPrice }}</td>
+    </ng-container>
+
+    <!-- Notes Column -->
+    <ng-container matColumnDef="notes">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes</th>
+      <td mat-cell *matCellDef="let row"> {{ row.notes }}</td>
+    </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-form-field appearance="outline" class="status-dropdown">
+        <mat-select (valueChange)="changeOrderStatus($event, row)" [(value)]="row.status">
+          <mat-option value="new">New</mat-option>
+          <mat-option value="ordered">Ordered</mat-option>
+          <mat-option value="home">Home</mat-option>
+          <mat-option value="libya">Libya</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12rem"> Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
+          Edit
+        </button>
+        <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
+          Delete
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[25, 100]" aria-label="Select page of users"></mat-paginator>
+</div>
+
