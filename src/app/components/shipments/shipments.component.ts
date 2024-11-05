@@ -30,10 +30,19 @@ export type ShipmentData = BaseShipment
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule],
 })
-export class  ShipmentsComponent {
+export class ShipmentsComponent {
   displayedColumns: string[] = ['image', 'aramixId', 'internalId', 'numberOfItems', 'totalPrice', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<Shipment>;
-  orderData: ShipmentData = {image: '', aramixId: 0, internalId: 0, numberOfItems: 1, totalPrice: 0, notes: '', status: 'new', createdTime: ''};
+  orderData: ShipmentData = {
+    image: '',
+    aramixId: 0,
+    internalId: 0,
+    numberOfItems: 1,
+    totalPrice: 0,
+    notes: '',
+    status: 'new',
+    createdTime: ''
+  };
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: Shipment | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -66,7 +75,7 @@ export class  ShipmentsComponent {
           fileRef.getDownloadURL().subscribe((url) => {
             row.image = url
             this.orderData = row
-            this.onAdd()
+            this.updateShipment()
           });
         })
       )
@@ -133,6 +142,15 @@ export class  ShipmentsComponent {
     });
   }
 
+  updateShipment(): void {
+    if (this.orderToEditId !== null) {
+      this.shipmentService.update(this.orderToEditId, this.orderData).then(() => {
+        this.orderToEditId = null
+        this.dialog.closeAll()
+      });
+    }
+  }
+
   onAdd(): void {
     if (this.orderToEditId === null) {
       this.orderData.createdTime = new Date().toString()
@@ -140,13 +158,18 @@ export class  ShipmentsComponent {
         this.dialog.closeAll()
       });
     } else {
-      this.shipmentService.update(this.orderToEditId, this.orderData).then(() => {
-        this.orderToEditId = null
-        this.dialog.closeAll()
-      });
-
+      this.updateShipment()
     }
-      this.orderData  = {image: '', aramixId: 0, internalId: 0, numberOfItems: 1, totalPrice: 0, notes: '', status: 'new', createdTime: ''};
+    this.orderData = {
+      image: '',
+      aramixId: 0,
+      internalId: 0,
+      numberOfItems: 1,
+      totalPrice: 0,
+      notes: '',
+      status: 'new',
+      createdTime: ''
+    };
   }
 
   onCancel(): void {

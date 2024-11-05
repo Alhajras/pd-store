@@ -54,7 +54,18 @@ export type OrderData = BaseOrderInfo
 export class ToOrderTableComponent {
   displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'pdLink', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
-  orderData: OrderData = {name: '', price: 0, quantity: 1, link: '', pdLink: '', variant: '', notes: '', image: '', status: 'new', createdTime: ''};
+  orderData: OrderData = {
+    name: '',
+    price: 0,
+    quantity: 1,
+    link: '',
+    pdLink: '',
+    variant: '',
+    notes: '',
+    image: '',
+    status: 'new',
+    createdTime: ''
+  };
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: ToOrder | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -87,7 +98,7 @@ export class ToOrderTableComponent {
           fileRef.getDownloadURL().subscribe((url) => {
             row.image = url
             this.orderData = row
-            this.onAdd()
+            this.editOrder()
           });
         })
       )
@@ -154,6 +165,16 @@ export class ToOrderTableComponent {
     });
   }
 
+  editOrder(): void {
+    if (this.orderToEditId !== null) {
+
+      this.tutorialService.update(this.orderToEditId, this.orderData).then(() => {
+        this.orderToEditId = null
+        this.dialog.closeAll()
+      });
+    }
+  }
+
   onAdd(): void {
     if (this.orderToEditId === null) {
       this.orderData.createdTime = new Date().toString()
@@ -161,13 +182,20 @@ export class ToOrderTableComponent {
         this.dialog.closeAll()
       });
     } else {
-      this.tutorialService.update(this.orderToEditId, this.orderData).then(() => {
-        this.orderToEditId = null
-        this.dialog.closeAll()
-      });
-
+      this.editOrder()
     }
-      this.orderData = {name: '', price: 0, quantity: 1, link: '', pdLink: '',  variant: '', notes: '', image: '', status: 'new', createdTime: ''};
+    this.orderData = {
+      name: '',
+      price: 0,
+      quantity: 1,
+      link: '',
+      pdLink: '',
+      variant: '',
+      notes: '',
+      image: '',
+      status: 'new',
+      createdTime: ''
+    };
   }
 
   onCancel(): void {
