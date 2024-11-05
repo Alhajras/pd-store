@@ -33,7 +33,7 @@ export type ShipmentData = BaseShipment
 export class  ShipmentsComponent {
   displayedColumns: string[] = ['image', 'aramixId', 'internalId', 'numberOfItems', 'totalPrice', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<Shipment>;
-  orderData: ShipmentData = {aramixId: 0, internalId: 0, numberOfItems: 1, totalPrice: 0, notes: '', status: 'new', createdTime: ''};
+  orderData: ShipmentData = {image: '', aramixId: 0, internalId: 0, numberOfItems: 1, totalPrice: 0, notes: '', status: 'new', createdTime: ''};
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: Shipment | null = null
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -64,7 +64,7 @@ export class  ShipmentsComponent {
       .pipe(
         finalize(() => {
           fileRef.getDownloadURL().subscribe((url) => {
-            // row.image = url
+            row.image = url
             this.orderData = row
             this.onAdd()
           });
@@ -146,7 +146,7 @@ export class  ShipmentsComponent {
       });
 
     }
-      this.orderData  = {aramixId: 0, internalId: 0, numberOfItems: 1, totalPrice: 0, notes: '', status: 'new', createdTime: ''};
+      this.orderData  = {image: '', aramixId: 0, internalId: 0, numberOfItems: 1, totalPrice: 0, notes: '', status: 'new', createdTime: ''};
   }
 
   onCancel(): void {

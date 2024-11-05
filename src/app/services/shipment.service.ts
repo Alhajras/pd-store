@@ -8,6 +8,7 @@ export interface BaseShipment {
   numberOfItems: number
   status: string
   createdTime: string
+  image: string
   notes: string
   totalPrice: number
 }
