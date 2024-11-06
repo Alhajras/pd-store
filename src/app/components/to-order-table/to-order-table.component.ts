@@ -12,9 +12,10 @@ import {FormsModule} from "@angular/forms";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
-import {SlicePipe} from "@angular/common";
+import {NgForOf, SlicePipe} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
+import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 
 function cloneExcludingField<T, K extends keyof T>(obj: T, fieldToExclude: K): Omit<T, K> {
   const {[fieldToExclude]: _, ...clonedObj} = obj;
@@ -49,7 +50,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './to-order-table.component.html',
   styleUrls: ['./to-order-table.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ToOrderTableComponent {
   displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'pdLink', 'notes', 'status', 'actions'];
@@ -73,11 +74,13 @@ export class ToOrderTableComponent {
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
   public orderToEditId: string | null = null;
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
-  public moveTo = {quantity: 1, target: 0, maxQuantity: 1}
+  public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
+  public shipments: Shipment[] = []
 
 
   constructor(private tutorialService: TutorialService,
               public dialog: MatDialog,
+              private shipmentService: ShipmentService,
               private storage: AngularFireStorage,
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
@@ -236,8 +239,22 @@ export class ToOrderTableComponent {
   }
 
   openMoveToDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
+    this.retrieveShipments()
     this.moveTo.maxQuantity = row.quantity
+    this.moveTo.orderId = row.id
     this.openDialog(dialogTemplate)
+  }
+
+  public retrieveShipments(): void {
+    this.shipmentService.getAll().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+        )
+      )
+    ).subscribe(data => {
+      this.shipments = data
+    });
   }
 
   changeOrderStatus(newStatus: any, order: ToOrder) {
@@ -245,6 +262,19 @@ export class ToOrderTableComponent {
     this.orderData.status = newStatus
     this.orderToEditId = order.id
     this.onAdd()
+  }
+
+  moveTheOrderToShipment(): void {
+    let shipment = this.shipments.find(s => s.id === this.moveTo.target)
+    if (shipment === undefined) return
+    shipment?.orders.push({orderId: this.moveTo.orderId, quantity: this.moveTo.quantity})
+    this.updateShipment(shipment.id, shipment)
+  }
+
+  updateShipment(id: string, shipment: Shipment): void {
+    this.shipmentService.update(id, shipment).then(() => {
+    console.log('done')
+    });
   }
 }
 

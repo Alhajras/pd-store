@@ -22,13 +22,13 @@
     <mat-form-field appearance="fill">
       <mat-label>Target</mat-label>
         <mat-select [(value)]="moveTo.target">
-          <mat-option value="new">New</mat-option>
+          <mat-option *ngFor="let shipment of shipments" value="{{shipment.id}}">Internal ID: {{shipment.internalId}} | Aramix ID: {{shipment.aramixId}}</mat-option>
         </mat-select>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button (click)="onCancel()">Cancel</button>
-    <button mat-button color="primary" (click)="onAdd()">Move</button>
+    <button mat-button color="primary" (click)="moveTheOrderToShipment()">Move</button>
   </mat-dialog-actions>
 </ng-template>
 

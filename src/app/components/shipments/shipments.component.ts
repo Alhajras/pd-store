@@ -39,7 +39,8 @@ export class ShipmentsComponent {
     totalPrice: 0,
     notes: '',
     status: 'new',
-    createdTime: ''
+    createdTime: '',
+    orders: [],
   };
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: Shipment | null = null
@@ -165,7 +166,8 @@ export class ShipmentsComponent {
       totalPrice: 0,
       notes: '',
       status: 'new',
-      createdTime: ''
+      createdTime: '',
+      orders: []
     };
   }
 

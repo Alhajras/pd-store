@@ -11,6 +11,7 @@ export interface BaseShipment {
   image: string
   notes: string
   totalPrice: number
+  orders: {orderId: string, quantity: number}[]
 }
 
 export interface Shipment extends BaseShipment {
