@@ -49,7 +49,6 @@ export class ShipmentsComponent {
   public orderToEditId: string | null = null;
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
 
-
   constructor(private shipmentService: ShipmentService,
               public dialog: MatDialog,
               private storage: AngularFireStorage,

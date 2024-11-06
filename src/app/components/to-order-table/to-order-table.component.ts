@@ -73,6 +73,7 @@ export class ToOrderTableComponent {
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
   public orderToEditId: string | null = null;
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
+  public moveTo = {quantity: 1, target: 0, maxQuantity: 1}
 
 
   constructor(private tutorialService: TutorialService,
@@ -231,6 +232,11 @@ export class ToOrderTableComponent {
   openEditDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
     this.orderToEditId = row.id
     this.orderData = {...row}
+    this.openDialog(dialogTemplate)
+  }
+
+  openMoveToDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
+    this.moveTo.maxQuantity = row.quantity
     this.openDialog(dialogTemplate)
   }
 
