@@ -1,5 +1,7 @@
 <button class="mb-2" mat-raised-button color="primary" (click)="openDialog(dialogTemplate)">New Order</button>
 
+
+<!-- Delete confirmation -->
 <ng-template #confirmationDialog>
   <div class="confirmation-container">
     <p>Are you sure you want to delete this item?</p>
@@ -8,6 +10,52 @@
   </div>
 </ng-template>
 
+<!--Move the order dialog -->
+<ng-template #movingOrderDialogTemplate>
+  <h2 mat-dialog-title>Add Order</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="orderData.name"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" [(ngModel)]="orderData.price"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Quantity</mat-label>
+      <input matInput type="number" [(ngModel)]="orderData.quantity"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Link</mat-label>
+      <input matInput [(ngModel)]=" orderData.link"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>PD Link</mat-label>
+      <input matInput [(ngModel)]=" orderData.pdLink"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Variant</mat-label>
+      <input matInput [(ngModel)]="orderData.variant"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Notes</mat-label>
+      <textarea matInput [(ngModel)]="orderData.notes"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onAdd()">{{ orderToEditId === null ? 'Add' : 'Edit' }}</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<!--Add order dialog-->
 <ng-template #dialogTemplate>
   <h2 mat-dialog-title>Add Order</h2>
   <mat-dialog-content>
@@ -82,13 +130,13 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
+      <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> Name</th>
       <td mat-cell *matCellDef="let row"> {{ row.name }}</td>
     </ng-container>
 
     <!-- Link Column -->
     <ng-container matColumnDef="link">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Link</th>
+      <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> Link</th>
       <td mat-cell *matCellDef="let row">
         <a [href]="row.link" target="_blank">{{ row.link | slice:0:25 }}...</a>
 
@@ -97,7 +145,7 @@
 
     <!-- PD Link Column -->
     <ng-container matColumnDef="pdLink">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> PD Link</th>
+      <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> PD Link</th>
       <td mat-cell *matCellDef="let row">
         <a [href]="row.pdLink" target="_blank">{{ row.pdLink | slice:0:25 }}...</a>
 
@@ -126,7 +174,7 @@
   <ng-container matColumnDef="status">
     <th mat-header-cell *matHeaderCellDef> Status </th>
     <td mat-cell *matCellDef="let row">
-      <mat-form-field appearance="outline" class="status-dropdown">
+      <mat-form-field style="width: 9rem" appearance="outline" class="status-dropdown">
         <mat-select (valueChange)="changeOrderStatus($event, row)" [(value)]="row.status">
           <mat-option value="new">New</mat-option>
           <mat-option value="ordered">Ordered</mat-option>
@@ -139,10 +187,13 @@
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12rem"> Actions</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 17rem"> Actions</th>
       <td mat-cell *matCellDef="let row">
         <button mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
           Edit
+        </button>
+        <button class="ml-1" mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
+          Move
         </button>
         <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
           Delete
