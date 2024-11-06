@@ -16,6 +16,7 @@ import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseShipment, Shipment, ShipmentService} from "src/app/services/shipment.service";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {ToOrderTableComponent} from "src/app/components/to-order-table/to-order-table.component";
 
 export type ShipmentData = BaseShipment
 
@@ -27,7 +28,7 @@ export type ShipmentData = BaseShipment
   templateUrl: './shipments.component.html',
   styleUrls: ['./shipments.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, MatExpansionModule, NgForOf],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, MatExpansionModule, NgForOf, ToOrderTableComponent],
 })
 export class ShipmentsComponent {
   shipments: Shipment[] = []

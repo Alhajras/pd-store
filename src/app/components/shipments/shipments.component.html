@@ -35,8 +35,7 @@
   <mat-expansion-panel *ngFor="let row of shipments">
     <mat-expansion-panel-header>
       <mat-panel-title>
-              <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
-
+        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
         <div>
           <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="uploadFile($event, row)"
                  accept=".png, .JPEG"/>
@@ -68,15 +67,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <mat-form-field>
-      <mat-label>First name</mat-label>
-      <input matInput />
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Age</mat-label>
-      <input matInput type="number" min="1" />
-    </mat-form-field>
+    <app-to-order-table></app-to-order-table>
   </mat-expansion-panel>
 </mat-accordion>
 

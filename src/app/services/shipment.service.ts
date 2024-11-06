@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import {ShipmentData} from "src/app/components/shipments/shipments.component";
+import {Observable} from "rxjs";
 
 export interface BaseShipment {
   aramixId: number
@@ -29,6 +30,12 @@ export class ShipmentService {
 
   constructor(private db: AngularFirestore) {
     this.shipmentRef = db.collection(this.dbPath);
+  }
+
+  getDocumentsByIds(ids: string[]): Observable<any[]> {
+    return this.db
+      .collection(this.dbPath, ref => ref.where('id', 'in', ids))
+      .valueChanges();
   }
 
   getAll(): AngularFirestoreCollection<ShipmentData> {

@@ -17,11 +17,6 @@ import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 
-function cloneExcludingField<T, K extends keyof T>(obj: T, fieldToExclude: K): Omit<T, K> {
-  const {[fieldToExclude]: _, ...clonedObj} = obj;
-  return clonedObj;
-}
-
 interface BaseOrderInfo {
   name: string;
   price: number;
