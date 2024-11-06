@@ -1,10 +1,9 @@
 import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import {MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {TutorialService} from "src/app/services/tutorial.service";
 import {finalize, map} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
@@ -15,8 +14,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {NgForOf, SlicePipe} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
-import {Shipment, ShipmentService} from "src/app/services/shipment.service";
-import {BaseShipment} from "src/app/services/shipment.service";
+import {BaseShipment, Shipment, ShipmentService} from "src/app/services/shipment.service";
 import {MatExpansionModule} from "@angular/material/expansion";
 
 export type ShipmentData = BaseShipment
@@ -184,8 +182,7 @@ export class ShipmentsComponent {
         )
       )
     ).subscribe(data => {
-      const orders: any[] = data
-      this.shipments = orders
+      this.shipments = data
     });
   }
 
@@ -195,11 +192,11 @@ export class ShipmentsComponent {
     this.openDialog(dialogTemplate)
   }
 
-  changeOrderStatus(newStatus: any, order: Shipment) {
-    this.orderData = order
+  changeOrderStatus(newStatus: any, shipment: Shipment) {
+    this.orderData = shipment
     this.orderData.status = newStatus
-    this.orderToEditId = order.id
-    this.onAdd()
+    this.orderToEditId = shipment.id
+    this.updateShipment()
   }
 }
 
