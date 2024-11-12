@@ -223,6 +223,14 @@ export class ToOrderTableComponent implements OnChanges{
             if (this.docsIds !== undefined) {
               let docs = this.docsIds.map(doc=>doc.orderId) as string[]
               data = data.filter(d=>docs.findIndex(doc=> doc === d.id) !== -1)
+
+              this.docsIds.forEach(doc => {
+                const order = data.find(item => item.id === doc.orderId);
+                if (order) {
+                  order.quantity = doc.quantity;
+                }
+              });
+
             }
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
