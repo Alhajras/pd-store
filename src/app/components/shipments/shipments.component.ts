@@ -72,8 +72,10 @@ export class ShipmentsComponent {
       .pipe(
         finalize(() => {
           fileRef.getDownloadURL().subscribe((url) => {
+            debugger
             row.image = url
             this.orderData = row
+            this.orderToEditId = row.id
             this.updateShipment()
           });
         })

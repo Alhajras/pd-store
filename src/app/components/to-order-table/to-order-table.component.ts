@@ -99,6 +99,7 @@ export class ToOrderTableComponent implements OnChanges{
           fileRef.getDownloadURL().subscribe((url) => {
             row.image = url
             this.orderData = row
+            this.orderToEditId = row.id
             this.editOrder()
           });
         })
@@ -168,7 +169,6 @@ export class ToOrderTableComponent implements OnChanges{
 
   editOrder(): void {
     if (this.orderToEditId !== null) {
-
       this.tutorialService.update(this.orderToEditId, this.orderData).then(() => {
         this.orderToEditId = null
         this.dialog.closeAll()
