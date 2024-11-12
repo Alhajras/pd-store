@@ -11,7 +11,7 @@ import {FormsModule} from "@angular/forms";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
-import {NgForOf, SlicePipe} from "@angular/common";
+import {NgForOf, NgIf, SlicePipe} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {BaseShipment, Shipment, ShipmentService} from "src/app/services/shipment.service";
@@ -28,7 +28,7 @@ export type ShipmentData = BaseShipment
   templateUrl: './shipments.component.html',
   styleUrls: ['./shipments.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, MatExpansionModule, NgForOf, ToOrderTableComponent],
+  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, MatExpansionModule, NgForOf, ToOrderTableComponent, NgIf],
 })
 export class ShipmentsComponent {
   shipments: Shipment[] = []
@@ -57,7 +57,7 @@ export class ShipmentsComponent {
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
   ) {
-    this.retrieveTutorials()
+    this.retrieveShipments()
   }
 
 
@@ -176,7 +176,7 @@ export class ShipmentsComponent {
     this.dialog.closeAll()
   }
 
-  public retrieveTutorials(): void {
+  public retrieveShipments(): void {
     this.shipmentService.getAll().snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>

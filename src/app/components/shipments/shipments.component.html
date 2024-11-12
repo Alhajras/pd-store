@@ -31,7 +31,7 @@
     <button mat-button color="primary" (click)="onAdd()">{{ orderToEditId === null ? 'Add' : 'Edit' }}</button>
   </mat-dialog-actions>
 </ng-template>
- <mat-accordion class="example-headers-align" multi>
+<mat-accordion class="example-headers-align" multi>
   <mat-expansion-panel *ngFor="let row of shipments">
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -44,19 +44,19 @@
 
       </mat-panel-title>
       <mat-panel-description>
-        <span class="mr-5">Aramix ID: {{ row.aramixId}}</span>
-        <span class="mr-5">Internal Id: {{row.internalId}}</span>
-        <span class="mr-5">#Items: {{row.numberOfItems}}</span>
-        <span class="mr-5">Total Price: {{row.totalPrice}}</span>
+        <span class="mr-5">Aramix ID: {{ row.aramixId }}</span>
+        <span class="mr-5">Internal Id: {{ row.internalId }}</span>
+        <span class="mr-5">#Items: {{ row.numberOfItems }}</span>
+        <span class="mr-5">Total Price: {{ row.totalPrice }}</span>
         <mat-select (valueChange)="changeOrderStatus($event, row)" [(value)]="row.status">
           <mat-option value="new">New</mat-option>
           <mat-option value="DHL">DHL</mat-option>
           <mat-option value="Aramix">Aramix</mat-option>
           <mat-option value="Libya">Libya</mat-option>
         </mat-select>
-        <span class="mr-5">Notes: {{row.notes}}</span>
+        <span class="mr-5">Notes: {{ row.notes }}</span>
 
-                <button mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
+        <button mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
           Edit
         </button>
         <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
@@ -67,7 +67,8 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <app-to-order-table></app-to-order-table>
+    <app-to-order-table *ngIf="row.orders.length" [docsIds]="row.orders"></app-to-order-table>
+    <div class="mt-5" *ngIf="!row.orders.length"> No orders are added!</div>
   </mat-expansion-panel>
 </mat-accordion>
 

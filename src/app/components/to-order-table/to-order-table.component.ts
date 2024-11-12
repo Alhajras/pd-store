@@ -1,4 +1,4 @@
-import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
@@ -47,7 +47,7 @@ export type OrderData = BaseOrderInfo
   standalone: true,
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
-export class ToOrderTableComponent {
+export class ToOrderTableComponent implements OnChanges{
   displayedColumns: string[] = ['image', 'name', 'price', 'quantity', 'variant', 'link', 'pdLink', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {
@@ -72,6 +72,8 @@ export class ToOrderTableComponent {
   public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
   public shipments: Shipment[] = []
 
+  @Input()
+  docsIds!: {orderId: string, quantity: number}[]
 
   constructor(private tutorialService: TutorialService,
               public dialog: MatDialog,
@@ -80,7 +82,7 @@ export class ToOrderTableComponent {
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
   ) {
-    this.retrieveTutorials()
+    this.retrieveOrders()
   }
 
 
@@ -210,21 +212,22 @@ export class ToOrderTableComponent {
     }
   }
 
-  public retrieveTutorials(): void {
-    this.tutorialService.getAll().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+  public retrieveOrders(): void {
+      this.tutorialService.getAll().snapshotChanges().pipe(
+        map(changes =>
+          changes.map(c =>
+            ({id: c.payload.doc.id, ...c.payload.doc.data()})
+          )
         )
-      )
-    ).subscribe(data => {
-      const orders: any[] = data
-
-      // Assign the data to the data source for the table to render
-      this.dataSource = new MatTableDataSource(orders);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+      ).subscribe(data => {
+            if (this.docsIds !== undefined) {
+              let docs = this.docsIds.map(doc=>doc.orderId) as string[]
+              data = data.filter(d=>docs.findIndex(doc=> doc === d.id) !== -1)
+            }
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
   }
 
   openEditDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
@@ -268,8 +271,16 @@ export class ToOrderTableComponent {
 
   updateShipment(id: string, shipment: Shipment): void {
     this.shipmentService.update(id, shipment).then(() => {
-    console.log('done')
+      console.log('done')
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('docsIds' in changes) {
+      debugger
+      this.retrieveOrders()
+    }
+
   }
 }
 
