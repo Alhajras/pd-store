@@ -8,19 +8,12 @@ import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-// import { AddTutorialComponent } from './components/add-tutorial/add-tutorial.component';
-// import { TutorialDetailsComponent } from './components/tutorial-details/tutorial-details.component';
-// import { TutorialsListComponent } from './components/tutorials-list/tutorials-list.component';
-// import { ToOrderTableComponent } from './components/to-order-table/to-order-table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    // AddTutorialComponent,
-    // TutorialDetailsComponent,
-    // TutorialsListComponent,
-    // ToOrderTableComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AngularFirestoreModule,
     BrowserAnimationsModule, // for firestore
   ],
-  providers: [],
+  providers: [    provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

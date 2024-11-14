@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import {ShipmentData} from "src/app/components/shipments/shipments.component";
 import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
 
 export interface BaseShipment {
   aramixId: number
@@ -25,11 +26,17 @@ export interface Shipment extends BaseShipment {
 })
 export class ShipmentService {
   private dbPath = '/shipments';
+    private cloudFunctionUrl = 'https://testing-qcwtqe5maq-uc.a.run.app';
 
   shipmentRef: AngularFirestoreCollection<ShipmentData>;
 
-  constructor(private db: AngularFirestore) {
+  constructor(private db: AngularFirestore, private http: HttpClient) {
     this.shipmentRef = db.collection(this.dbPath);
+  }
+
+
+  getShipmentCount(): Observable<{ shipmentCount: number }> {
+    return this.http.get<{ shipmentCount: number }>(this.cloudFunctionUrl)
   }
 
   getDocumentsByIds(ids: string[]): Observable<any[]> {

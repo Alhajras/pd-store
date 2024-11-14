@@ -289,7 +289,6 @@ export class ToOrderTableComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('docsIds' in changes) {
-      debugger
       this.retrieveOrders()
     }
 

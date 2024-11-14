@@ -179,6 +179,9 @@ export class ShipmentsComponent {
   }
 
   public retrieveShipments(): void {
+    this.shipmentService.getShipmentCount().subscribe(j=>{
+      console.log(j)
+    })
     this.shipmentService.getAll().snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>
