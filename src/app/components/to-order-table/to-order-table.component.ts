@@ -248,6 +248,8 @@ export class ToOrderTableComponent implements OnChanges{
     this.retrieveShipments()
     this.moveTo.maxQuantity = row.quantity
     this.moveTo.orderId = row.id
+    this.orderData = row
+    this.orderToEditId = row.id
     this.openDialog(dialogTemplate)
   }
 
@@ -274,7 +276,9 @@ export class ToOrderTableComponent implements OnChanges{
     let shipment = this.shipments.find(s => s.id === this.moveTo.target)
     if (shipment === undefined) return
     shipment?.orders.push({orderId: this.moveTo.orderId, quantity: this.moveTo.quantity})
+    this.orderData.quantity = this.orderData.quantity - this.moveTo.quantity
     this.updateShipment(shipment.id, shipment)
+    this.editOrder()
   }
 
   updateShipment(id: string, shipment: Shipment): void {
