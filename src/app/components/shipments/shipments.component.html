@@ -46,8 +46,8 @@
       <mat-panel-description>
         <span class="mr-5">Aramix ID: {{ row.aramixId }}</span>
         <span class="mr-5">Internal Id: {{ row.internalId }}</span>
-        <span class="mr-5">#Items: {{ row.numberOfItems }}</span>
-        <span class="mr-5">Total Price: {{ row.totalPrice }}</span>
+        <span class="mr-5">#Items: {{ row.totalOrderQuantity }}</span>
+        <span class="mr-5">Total Price: {{ row.totalShipmentPrice }}</span>
         <mat-select (valueChange)="changeOrderStatus($event, row)" [(value)]="row.status">
           <mat-option value="new">New</mat-option>
           <mat-option value="DHL">DHL</mat-option>

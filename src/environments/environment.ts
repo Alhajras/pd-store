@@ -1,4 +1,4 @@
-import {FIREBASE} from "secret";
+import {FIREBASE} from "src/secret";
 
 export const environment = {
   production: true,

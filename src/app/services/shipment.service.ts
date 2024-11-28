@@ -35,8 +35,8 @@ export class ShipmentService {
   }
 
 
-  getShipmentCount(): Observable<{ shipmentCount: number }> {
-    return this.http.get<{ shipmentCount: number }>(this.cloudFunctionUrl)
+  getShipmentCount(): Observable<{ shipments: any[], totalShipments: number }> {
+    return this.http.get<{ shipments: any[], totalShipments: number }>(this.cloudFunctionUrl)
   }
 
   getDocumentsByIds(ids: string[]): Observable<any[]> {

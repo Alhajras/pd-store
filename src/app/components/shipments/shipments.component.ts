@@ -31,7 +31,7 @@ export type ShipmentData = BaseShipment
   imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, MatExpansionModule, NgForOf, ToOrderTableComponent, NgIf],
 })
 export class ShipmentsComponent {
-  shipments: Shipment[] = []
+  shipments: any[] = []
   orderData: ShipmentData = {
     image: '',
     aramixId: 0,
@@ -179,18 +179,9 @@ export class ShipmentsComponent {
   }
 
   public retrieveShipments(): void {
-    this.shipmentService.getShipmentCount().subscribe(j=>{
-      console.log(j)
+    this.shipmentService.getShipmentCount().subscribe(data=>{
+      this.shipments = data.shipments
     })
-    this.shipmentService.getAll().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
-        )
-      )
-    ).subscribe(data => {
-      this.shipments = data
-    });
   }
 
   openEditDialog(dialogTemplate: TemplateRef<any>, row: Shipment) {
