@@ -273,10 +273,24 @@ export class ToOrderTableComponent implements OnChanges{
   }
 
   moveTheOrderToShipment(): void {
-    let shipment = this.shipments.find(s => s.id === this.moveTo.target)
-    if (shipment === undefined) return
-    shipment?.orders.push({orderId: this.moveTo.orderId, quantity: this.moveTo.quantity})
-    this.orderData.quantity = this.orderData.quantity - this.moveTo.quantity
+// Find the target shipment
+const shipment = this.shipments.find(s => s.id === this.moveTo.target);
+if (!shipment) return;
+
+// Find the index of the order within the shipment
+const orderIndex = shipment.orders?.findIndex(o => o.orderId === this.moveTo.orderId);
+
+if (orderIndex !== undefined && orderIndex >= 0) {
+  // Update the quantity of the existing order
+  shipment.orders[orderIndex].quantity += this.moveTo.quantity;
+} else {
+  // Add a new order to the shipment
+  shipment.orders = shipment.orders || []; // Ensure orders array is initialized
+  shipment.orders.push({ orderId: this.moveTo.orderId, quantity: this.moveTo.quantity });
+}
+
+// Update the overall order data quantity
+this.orderData.quantity -= this.moveTo.quantity;
     this.updateShipment(shipment.id, shipment)
     this.editOrder()
   }
