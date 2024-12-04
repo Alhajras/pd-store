@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import {OrderData} from "src/app/components/to-order-table/to-order-table.component";
+import {OrderData} from "src/app/components/to-order-table/products.component";
 import {Observable} from "rxjs";
 
 @Injectable({
