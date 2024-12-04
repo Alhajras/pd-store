@@ -22,6 +22,10 @@
     <mat-form-field appearance="fill">
       <mat-label>Target</mat-label>
       <mat-select [(value)]="moveTo.target">
+        <mat-option  value="All products">
+          All products
+        </mat-option>
+
         <mat-option *ngFor="let shipment of shipments" value="{{shipment.id}}">Internal ID: {{ shipment.internalId }} |
           Aramix ID: {{ shipment.aramixId }}
         </mat-option>

@@ -16,6 +16,7 @@ import {NgForOf, SlicePipe} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
+import { ProductService } from 'src/app/services/product.service';
 
 interface BaseOrderInfo {
   name: string;
@@ -76,6 +77,7 @@ export class ToOrderTableComponent implements OnChanges{
   docsIds!: {orderId: string, quantity: number}[]
 
   constructor(private tutorialService: TutorialService,
+              private productService: ProductService,
               public dialog: MatDialog,
               private shipmentService: ShipmentService,
               private storage: AngularFireStorage,
@@ -271,8 +273,18 @@ export class ToOrderTableComponent implements OnChanges{
     this.orderToEditId = order.id
     this.onAdd()
   }
+  moveToAllProducts(): void {
+// Find the index of the order within the shipment
+const order = this.dataSource.data.find(o => o.id === this.moveTo.orderId);
+this.productService.create(order as BaseOrderInfo)
+  }
 
   moveTheOrderToShipment(): void {
+    if (this.moveTo.target === 'All products'){
+     this.moveToAllProducts()
+     this.dialog.closeAll()
+      return 
+    }
 // Find the target shipment
 const shipment = this.shipments.find(s => s.id === this.moveTo.target);
 if (!shipment) return;

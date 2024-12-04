@@ -4,7 +4,7 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {TutorialService} from "src/app/services/tutorial.service";
+import {ProductService} from "src/app/services/product.service";
 import {finalize, map} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
@@ -75,7 +75,7 @@ export class ProductsComponent implements OnChanges{
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
 
-  constructor(private tutorialService: TutorialService,
+  constructor(private productService: ProductService,
               public dialog: MatDialog,
               private shipmentService: ShipmentService,
               private storage: AngularFireStorage,
@@ -144,7 +144,7 @@ export class ProductsComponent implements OnChanges{
 
   confirmDelete() {
     if (this.orderToDelete !== null) {
-      this.tutorialService.delete(this.orderToDelete.id).then(() => {
+      this.productService.delete(this.orderToDelete.id).then(() => {
         this.overlayRef?.dispose();
       });
     }
@@ -169,7 +169,7 @@ export class ProductsComponent implements OnChanges{
 
   editOrder(): void {
     if (this.orderToEditId !== null) {
-      this.tutorialService.update(this.orderToEditId, this.orderData).then(() => {
+      this.productService.update(this.orderToEditId, this.orderData).then(() => {
         this.orderToEditId = null
         this.dialog.closeAll()
       });
@@ -179,7 +179,7 @@ export class ProductsComponent implements OnChanges{
   onAdd(): void {
     if (this.orderToEditId === null) {
       this.orderData.createdTime = new Date().toString()
-      this.tutorialService.create(this.orderData).then(() => {
+      this.productService.create(this.orderData).then(() => {
         this.dialog.closeAll()
       });
     } else {
@@ -213,7 +213,7 @@ export class ProductsComponent implements OnChanges{
   }
 
   public retrieveOrders(): void {
-      this.tutorialService.getAll().snapshotChanges().pipe(
+      this.productService.getAll().snapshotChanges().pipe(
         map(changes =>
           changes.map(c =>
             ({id: c.payload.doc.id, ...c.payload.doc.data()})
