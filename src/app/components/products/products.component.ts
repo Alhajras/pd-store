@@ -216,7 +216,7 @@ export class ProductsComponent implements OnChanges{
       this.productService.getAll().snapshotChanges().pipe(
         map(changes =>
           changes.map(c =>
-            ({id: c.payload.doc.id, ...c.payload.doc.data()})
+            ({...c.payload.doc.data(), id: c.payload.doc.id})
           )
         )
       ).subscribe(data => {
