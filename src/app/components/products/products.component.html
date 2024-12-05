@@ -1,4 +1,4 @@
-<button class="mb-2" mat-raised-button color="primary" (click)="openDialog(dialogTemplate)">New Order</button>
+<button class="mb-2" mat-raised-button color="primary" (click)="openDialog(dialogTemplate)">New Product</button>
 
 
 <!-- Delete confirmation -->
@@ -11,7 +11,7 @@
 </ng-template>
 
 <!--Move the order dialog -->
-<ng-template #movingOrderDialogTemplate>
+<!-- <ng-template #movingOrderDialogTemplate>
   <h2 mat-dialog-title>Move Order</h2>
   <mat-dialog-content>
     <mat-form-field appearance="fill">
@@ -32,7 +32,7 @@
     <button mat-button (click)="onCancel()">Cancel</button>
     <button mat-button color="primary" (click)="moveTheOrderToShipment()">Move</button>
   </mat-dialog-actions>
-</ng-template>
+</ng-template> -->
 
 <!--Add order dialog-->
 <ng-template #dialogTemplate>
@@ -176,10 +176,10 @@
         <button mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
           Edit
         </button>
-        <button class="ml-1" mat-raised-button color="primary"
+        <!-- <button class="ml-1" mat-raised-button color="primary"
                 (click)="openMoveToDialog(movingOrderDialogTemplate, row)">
           Move
-        </button>
+        </button> -->
         <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
           Delete
         </button>
