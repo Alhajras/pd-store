@@ -12,7 +12,7 @@ import {FormsModule} from "@angular/forms";
 import {Overlay, OverlayRef} from "@angular/cdk/overlay";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {MatIconModule} from "@angular/material/icon";
-import {NgForOf, SlicePipe} from "@angular/common";
+import {NgForOf, SlicePipe, NgIf} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
@@ -21,8 +21,10 @@ import { ProductService } from 'src/app/services/product.service';
 interface BaseOrderInfo {
   name: string;
   price: number;
+  sellPrice: number;
   quantity: number;
   link: string;
+  barcode: string;
   variant: string;
   notes: string;
   status: string;
@@ -46,7 +48,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './to-order-table.component.html',
   styleUrls: ['./to-order-table.component.css'],
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports: [NgIf, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ToOrderTableComponent implements OnChanges{
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'notes', 'status', 'actions'];
@@ -54,8 +56,10 @@ export class ToOrderTableComponent implements OnChanges{
   orderData: OrderData = {
     name: '',
     price: 0,
+    sellPrice: 0,
     quantity: 1,
     link: '',
+    barcode: '',
     pdLink: '',
     variant: '',
     notes: '',
@@ -190,9 +194,11 @@ export class ToOrderTableComponent implements OnChanges{
     this.orderData = {
       name: '',
       price: 0,
+      sellPrice: 0,
       quantity: 1,
       link: '',
       pdLink: '',
+      barcode: '',
       variant: '',
       notes: '',
       image: '',

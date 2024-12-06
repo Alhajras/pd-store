@@ -45,11 +45,21 @@
           <input matInput [(ngModel)]="orderData.name"/>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Price</mat-label>
-          <input matInput type="number" [(ngModel)]="orderData.price"/>
-        </mat-form-field>
-
+        <div  class="d-flex">
+          <div style="width: 10rem"  class="mr-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Buy Price</mat-label>
+            <input matInput type="number" [(ngModel)]="orderData.price"/>
+          </mat-form-field>
+        </div>
+        <div style="width: 10rem"  class="mr-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Sell Price €</mat-label>
+            <input matInput type="number" [(ngModel)]="orderData.sellPrice"/>
+          </mat-form-field>
+        </div>
+      </div>
+  
         <mat-form-field appearance="fill">
           <mat-label>Link</mat-label>
           <input matInput [(ngModel)]=" orderData.link"/>
@@ -71,6 +81,11 @@
         </mat-form-field>
       </div>
     </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Barcode</mat-label>
+      <input matInput [(ngModel)]=" orderData.barcode"/>
+    </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Notes</mat-label>
         <textarea matInput [(ngModel)]="orderData.notes"></textarea>
@@ -114,7 +129,9 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> Name</th>
-      <td mat-cell *matCellDef="let row"> {{ row.name }} {{ row.id }}</td>
+      <td mat-cell *matCellDef="let row"> <div>{{ row.name  | slice:0:100 }}
+        <span *ngIf="row.name.length >= 100">...</span></div>
+        <div><b> <small>{{ row.barcode }}</small></b></div></td>
     </ng-container>
 
         <!-- Variant Column -->
@@ -126,7 +143,7 @@
 
     <!-- Link Column -->
     <ng-container matColumnDef="link">
-      <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> Link</th>
+      <th mat-header-cell style="width: 10rem" *matHeaderCellDef mat-sort-header> Link</th>
       <td mat-cell *matCellDef="let row">
         <a [href]="row.link" target="_blank">{{ row.link | slice:0:25 }}...</a>
 
@@ -135,19 +152,20 @@
 
     <!-- PD Link Column -->
     <ng-container matColumnDef="pdLink">
-      <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> PD Link</th>
+      <th mat-header-cell style="width: 10rem" *matHeaderCellDef mat-sort-header> PD Link</th>
       <td mat-cell *matCellDef="let row">
         <a [href]="row.pdLink" target="_blank">{{ row.pdLink | slice:0:25 }}...</a>
 
       </td>
     </ng-container>
 
-    <!-- Price Column -->
+    <!-- Buy Price Column -->
     <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Price</th>
-      <td mat-cell *matCellDef="let row"> {{ row.price }} €</td>
-    </ng-container>
-
+      <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 10rem"> Price</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="mr-2" style="color: #f44336;"> {{ row.price }} € </span> <span style="color: #82ff75;"> {{ row.sellPrice }} € </span></td>
+    </ng-container>            
+    
     <!-- Notes Column -->
     <ng-container matColumnDef="notes">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes</th>
