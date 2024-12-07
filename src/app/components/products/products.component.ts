@@ -16,6 +16,7 @@ import {NgForOf, SlicePipe, NgIf} from "@angular/common";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
+import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 
 interface BaseOrderInfo {
   name: string;
@@ -75,6 +76,7 @@ export class ProductsComponent implements OnChanges{
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
   public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
   public shipments: Shipment[] = []
+  public config : Configurations = {conversionPrice: 0}
 
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
@@ -85,10 +87,21 @@ export class ProductsComponent implements OnChanges{
               private storage: AngularFireStorage,
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
+              private readonly configService: ConfigurationsService,
   ) {
     this.retrieveOrders()
+    this.retrieveconfigurations()
   }
-
+  public retrieveconfigurations (){
+    this.configService.getAll().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+        )
+      )
+    ).subscribe(data => {
+      this.config = data[0]
+    });  }
 
   uploadFile(event: any, row: ToOrder) {
     const file = event.target.files[0];
