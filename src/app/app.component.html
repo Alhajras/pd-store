@@ -1,5 +1,6 @@
 <div>
   <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <!-- Left Section -->
     <a href="#" class="navbar-brand">Pixie Dust</a>
     <div class="navbar-nav mr-auto">
       <li class="nav-item">
@@ -11,13 +12,24 @@
       <li class="nav-item">
         <a routerLink="shipments" class="nav-link">Shipments</a>
       </li>
-      <mat-form-field class="example-full-width">
+      <li class="nav-item">
+        <a routerLink="orders" class="nav-link">Orders</a>
+      </li>
+    </div>
+
+    <!-- Right Section -->
+    <div class="navbar-nav ml-auto d-flex align-items-center">
+      <div class="demo-section mr-3">
+        <button mat-raised-button [matBadge]='cart.length' [matBadgeHidden]="false" (click)="redirectToCart()">
+          Cart
+        </button>
+      </div>
+      <mat-form-field style="width: 7rem;">
         <input matInput min="0" *ngIf="config" type="number" (input)="updateConfig()" [(ngModel)]="config.conversionPrice"/>
       </mat-form-field>
-  
     </div>
   </nav>
-  
+
   <div class="ml-3 mr-3 mt-3">
     <router-outlet></router-outlet>
   </div>

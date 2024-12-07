@@ -13,6 +13,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { MatInputModule } from '@angular/material/input';
     AppRoutingModule,
     FormsModule,
     MatInputModule,
+    MatBadgeModule,
     MatSnackBarModule,
+    MatButtonModule,
     MatFormFieldModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

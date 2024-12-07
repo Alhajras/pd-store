@@ -18,7 +18,6 @@ import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
-import { CartService } from 'src/app/services/cart.service';
 
 interface BaseOrderInfo {
   name: string;
@@ -52,7 +51,7 @@ export type OrderData = BaseOrderInfo
   standalone: true,
   imports:[NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
-export class ProductsComponent implements OnChanges{
+export class OrdersComponent implements OnChanges{
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {
@@ -79,7 +78,6 @@ export class ProductsComponent implements OnChanges{
   public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
   public shipments: Shipment[] = []
   public config : Configurations = {conversionPrice: 0}
-  public cart: OrderData[] = []
 
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
@@ -91,24 +89,10 @@ export class ProductsComponent implements OnChanges{
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
               private readonly configService: ConfigurationsService,
-              private readonly cartService: CartService,
   ) {
     this.retrieveOrders()
     this.retrieveconfigurations()
-    this.retrieveCart()
   }
-
-  public retrieveCart (){
-    this.cartService.getAll().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
-        )
-      )
-    ).subscribe(data => {
-      this.cart = data
-    });  }
-
   public retrieveconfigurations (){
     this.configService.getAll().snapshotChanges().pipe(
       map(changes =>
@@ -141,11 +125,6 @@ export class ProductsComponent implements OnChanges{
       .subscribe();
   }
 
-  public addToCart (row: ToOrder){
-    this.cartService.create(row).then(() => {
-      this.dialog.closeAll()
-    });
-  }
   openDeleteConfirmation(event: MouseEvent, row: ToOrder) {
     // If an overlay is already open, close it
     if (this.overlayRef) {
