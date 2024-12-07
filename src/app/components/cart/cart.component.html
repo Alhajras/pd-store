@@ -116,6 +116,14 @@
   <mat-label>Filter</mat-label>
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. perfume" #input>
 </mat-form-field>
+<mat-card>
+  <mat-card-content>
+  <div style="color: white;"> 
+    <span style="float: right;"  class='mr-5'>{{totalProducts}}</span>
+    <span style="font-size:large; float: right;" class='mr-5'>Total Price: {{totlaPriceToPay}} L.D</span>
+    </div>  
+  </mat-card-content>
+</mat-card>
 
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>

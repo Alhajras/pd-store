@@ -20,6 +20,7 @@ import { Configurations, ConfigurationsService } from 'src/app/services/configur
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { CartService } from 'src/app/services/cart.service';
 import { InvoiceService, InvoiceData } from 'src/app/services/invoice.service';
+import {MatCardModule} from '@angular/material/card';
 
 interface BaseOrderInfo {
   name: string;
@@ -51,7 +52,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
   standalone: true,
-  imports:[NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class CartComponent {
   displayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
@@ -88,6 +89,8 @@ export class CartComponent {
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
   public config : Configurations = {conversionPrice: 0}
   public cart: OrderData[] = []
+  protected totlaPriceToPay = 0
+  protected totalProducts = 0
 
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
@@ -101,7 +104,6 @@ export class CartComponent {
               private readonly cartService: CartService,
               private readonly checkoutService: InvoiceService
   ) {
-    this.retrieveCart()
     this.retrieveconfigurations()
   }
 
@@ -116,6 +118,18 @@ export class CartComponent {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+      this.totlaPriceToPay = 0
+    this.totalProducts = 0
+
+    data.forEach(o=>{
+      this.totalProducts += 1
+      let sellPrice =  o.sellPrice * this.config.conversionPrice
+      if (sellPrice > 0)
+{
+  sellPrice = new RoundUpToFivePipe().transform(sellPrice)
+  this.totlaPriceToPay += sellPrice}
+    })
     });  }
 
   public retrieveconfigurations (){
@@ -127,6 +141,7 @@ export class CartComponent {
       )
     ).subscribe(data => {
       this.config = data[0]
+      this.retrieveCart()
     });  }
 
   uploadFile(event: any, row: ToOrder) {
