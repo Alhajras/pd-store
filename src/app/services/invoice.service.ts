@@ -11,6 +11,10 @@ interface BaseInvoiceInfo {
   orders: OrderData[]
 }
 
+export interface Invoice extends BaseInvoiceInfo {
+  id: string
+}
+
 export type InvoiceData = BaseInvoiceInfo
 
 @Injectable({
