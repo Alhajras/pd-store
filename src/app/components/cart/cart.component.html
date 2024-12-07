@@ -1,0 +1,219 @@
+<button class="mb-2" mat-raised-button color="primary" (click)="openDialog(dialogTemplate)">New Product</button>
+
+
+<!-- Delete confirmation -->
+<ng-template #confirmationDialog>
+  <div class="confirmation-container">
+    <p>Are you sure you want to delete this item?</p>
+    <button mat-raised-button color="accent" (click)="cancelDelete()">Cancel</button>
+    <button mat-raised-button color="warn" (click)="confirmDelete()">Delete</button>
+  </div>
+</ng-template>
+
+<!--Move the order dialog -->
+<!-- <ng-template #movingOrderDialogTemplate>
+  <h2 mat-dialog-title>Move Order</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Quantity</mat-label>
+      <input matInput min="1" max="{{moveTo.maxQuantity}}" type="number" [(ngModel)]="moveTo.quantity"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Target</mat-label>
+      <mat-select [(value)]="moveTo.target">
+        <mat-option *ngFor="let shipment of shipments" value="{{shipment.id}}">Internal ID: {{ shipment.internalId }} |
+          Aramix ID: {{ shipment.aramixId }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="moveTheOrderToShipment()">Move</button>
+  </mat-dialog-actions>
+</ng-template> -->
+
+<!--Add order dialog-->
+<ng-template #dialogTemplate>
+  <h2 mat-dialog-title>Add Order</h2>
+  <mat-dialog-content>
+    <div class="d-flex">
+      <div class="mr-2">
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="orderData.name"/>
+        </mat-form-field>
+
+        <div  class="d-flex">
+          <div style="width: 10rem"  class="mr-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Buy Price</mat-label>
+            <input matInput type="number" [(ngModel)]="orderData.price"/>
+          </mat-form-field>
+        </div>
+        <div style="width: 10rem"  class="mr-2">
+          <mat-form-field appearance="fill">
+            <mat-label>Sell Price €</mat-label>
+            <input matInput type="number" [(ngModel)]="orderData.sellPrice"/>
+          </mat-form-field>
+        </div>
+      </div>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Link</mat-label>
+          <input matInput [(ngModel)]=" orderData.link"/>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Variant</mat-label>
+          <input matInput [(ngModel)]="orderData.variant"/>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" [(ngModel)]="orderData.quantity"/>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>PD Link</mat-label>
+          <input matInput [(ngModel)]=" orderData.pdLink"/>
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Barcode</mat-label>
+      <input matInput [(ngModel)]=" orderData.barcode"/>
+    </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Notes</mat-label>
+        <textarea matInput [(ngModel)]="orderData.notes"></textarea>
+      </mat-form-field>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onAdd()">{{ orderToEditId === null ? 'Add' : 'Edit' }}</button>
+  </mat-dialog-actions>
+</ng-template>
+
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. perfume" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Image</th>
+      <td mat-cell *matCellDef="let row">
+        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
+
+        <div>
+          <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="uploadFile($event, row)"
+                 accept=".png, .JPEG"/>
+          <button class="ml-4 mt-1 mb-1" mat-flat-button color="primary" (click)="csvInput.click()">Upload</button>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Quantity Column -->
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity</th>
+      <td mat-cell *matCellDef="let row"> {{ row.quantity }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> Name</th>
+      <td mat-cell *matCellDef="let row"> <div>{{ row.name  | slice:0:100 }}
+        <span *ngIf="row.name.length >= 100">...</span></div>
+        <div><b> <small>{{ row.barcode }}</small></b></div></td>
+    </ng-container>
+
+        <!-- Variant Column -->
+    <ng-container matColumnDef="variant">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant</th>
+      <td mat-cell *matCellDef="let row"> {{ row.variant }}</td>
+    </ng-container>
+
+
+    <!-- Link Column -->
+    <ng-container matColumnDef="link">
+      <th mat-header-cell style="width: 10rem" *matHeaderCellDef mat-sort-header> Link</th>
+      <td mat-cell *matCellDef="let row">
+        <a [href]="row.link" target="_blank">{{ row.link | slice:0:25 }}...</a>
+
+      </td>
+    </ng-container>
+
+    <!-- PD Link Column -->
+    <ng-container matColumnDef="pdLink">
+      <th mat-header-cell style="width: 10rem" *matHeaderCellDef mat-sort-header> PD Link</th>
+      <td mat-cell *matCellDef="let row">
+        <a [href]="row.pdLink" target="_blank">{{ row.pdLink | slice:0:25 }}...</a>
+
+      </td>
+    </ng-container>
+
+    <!-- Buy Price Column -->
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 10rem"> Price</th>
+      <td mat-cell *matCellDef="let row">
+        <div style="color: #758bff;"> {{ (row.sellPrice * config.conversionPrice)  | roundUpToFive }} L.D </div>
+      </td>
+    </ng-container>            
+    
+    <!-- Notes Column -->
+    <ng-container matColumnDef="notes">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes</th>
+      <td mat-cell *matCellDef="let row"> {{ row.notes }}</td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status</th>
+      <td mat-cell *matCellDef="let row">
+        <mat-form-field style="width: 9rem" appearance="outline" class="status-dropdown">
+          <mat-select (valueChange)="changeOrderStatus($event, row)" [(value)]="row.status">
+            <mat-option value="new">New</mat-option>
+            <mat-option value="ordered">Ordered</mat-option>
+            <mat-option value="home">Home</mat-option>
+            <mat-option value="libya">Libya</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 17rem"> Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-raised-button color="primary" (click)="openEditDialog(dialogTemplate,  row)">
+          Edit
+        </button>
+        <!-- <button class="ml-1" mat-raised-button color="primary"
+                (click)="openMoveToDialog(movingOrderDialogTemplate, row)">
+          Move
+        </button> -->
+        <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
+          Delete
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[25, 100]" aria-label="Select page of users"></mat-paginator>
+</div>
+

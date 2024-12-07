@@ -20,7 +20,9 @@
     <!-- Right Section -->
     <div class="navbar-nav ml-auto d-flex align-items-center">
       <div class="demo-section mr-3">
-        <button mat-raised-button [matBadge]='cart.length' [matBadgeHidden]="false" (click)="redirectToCart()">
+        <button mat-raised-button [matBadge]='cart.length'
+        routerLink="/cart"
+        [matBadgeHidden]="false" (click)="redirectToCart()">
           Cart
         </button>
       </div>

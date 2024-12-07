@@ -1,0 +1,24 @@
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.image-preview{
+  width: 8rem;
+  height: 8rem;
+}
+
+.confirmation-container {
+  padding: 20px;
+  background: white;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.confirmation-container p {
+  margin: 0 0 16px;
+}
