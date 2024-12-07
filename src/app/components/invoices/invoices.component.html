@@ -16,19 +16,26 @@
       <div class="mr-2">
         <mat-form-field appearance="fill">
           <mat-label>Name</mat-label>
-          <input matInput [(ngModel)]="orderData.name"/>
+          <input matInput [(ngModel)]="invoiceData.name"/>
         </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="fill">
           <mat-label>Address</mat-label>
-          <input matInput [(ngModel)]="orderData.address"/>
+          <input matInput [(ngModel)]="invoiceData.address"/>
         </mat-form-field>
       </div>
     </div>
+    <div>
+      <mat-form-field appearance="fill">
+        <mat-label>Phone</mat-label>
+        <input matInput [(ngModel)]="invoiceData.phoneNumber"/>
+      </mat-form-field>
+    </div>
+
       <mat-form-field appearance="fill">
         <mat-label>Notes</mat-label>
-        <textarea matInput [(ngModel)]="orderData.notes"></textarea>
+        <textarea matInput [(ngModel)]="invoiceData.notes"></textarea>
       </mat-form-field>
 
   </mat-dialog-content>

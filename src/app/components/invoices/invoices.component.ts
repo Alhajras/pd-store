@@ -33,7 +33,7 @@ export class InvoicesComponent implements OnChanges{
   displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'actions'];
   dataSource!: MatTableDataSource<Invoice>;
  
-  orderData: InvoiceData = {
+  invoiceData: InvoiceData = {
     address: '',
     phoneNumber: '',
     orders: [],
@@ -47,7 +47,7 @@ export class InvoicesComponent implements OnChanges{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
-  public orderToEditId: string | null = null;
+  public invoiceToEditId: string | null = null;
   public config : Configurations = {conversionPrice: 0}
 
   @Input()
@@ -59,7 +59,7 @@ export class InvoicesComponent implements OnChanges{
               private overlay: Overlay,
               private readonly configService: ConfigurationsService,
   ) {
-    this.retrieveOrders()
+    this.retrieveInvoices()
     this.retrieveconfigurations()
   }
   public retrieveconfigurations (){
@@ -123,7 +123,7 @@ export class InvoicesComponent implements OnChanges{
   openDialog(templateRef: TemplateRef<any>): void {
     const dialogRef = this.dialog.open(templateRef, {
       width: '50rem',
-      data: {...this.orderData},
+      data: {...this.invoiceData},
     });
 
     dialogRef.afterClosed().subscribe((result: InvoiceData | undefined) => {
@@ -134,9 +134,9 @@ export class InvoicesComponent implements OnChanges{
   }
 
   editOrder(): void {
-    if (this.orderToEditId !== null) {
-      this.invoiceService.update(this.orderToEditId, this.orderData).then(() => {
-        this.orderToEditId = null
+    if (this.invoiceToEditId !== null) {
+      this.invoiceService.update(this.invoiceToEditId, this.invoiceData).then(() => {
+        this.invoiceToEditId = null
         this.dialog.closeAll()
       });
     }
@@ -155,7 +155,7 @@ export class InvoicesComponent implements OnChanges{
     }
   }
 
-  public retrieveOrders(): void {
+  public retrieveInvoices(): void {
       this.invoiceService.getAll().snapshotChanges().pipe(
         map(changes =>
           changes.map(c =>
@@ -170,8 +170,8 @@ export class InvoicesComponent implements OnChanges{
   }
 
   openEditDialog(dialogTemplate: TemplateRef<any>, row: Invoice) {
-    this.orderToEditId = row.id
-    this.orderData = {...row}
+    this.invoiceToEditId = row.id
+    this.invoiceData = {...row}
     this.openDialog(dialogTemplate)
   }
   
@@ -184,7 +184,7 @@ export class InvoicesComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('docsIds' in changes) {
-      this.retrieveOrders()
+      this.retrieveInvoices()
     }
 
   }
