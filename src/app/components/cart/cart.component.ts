@@ -19,7 +19,7 @@ import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { CartService } from 'src/app/services/cart.service';
-import { CheckoutService, InvoiceData } from 'src/app/services/checkout.service';
+import { InvoiceService, InvoiceData } from 'src/app/services/invoice.service';
 
 interface BaseOrderInfo {
   name: string;
@@ -99,7 +99,7 @@ export class CartComponent {
               private overlay: Overlay,
               private readonly configService: ConfigurationsService,
               private readonly cartService: CartService,
-              private readonly checkoutService: CheckoutService
+              private readonly checkoutService: InvoiceService
   ) {
     this.retrieveCart()
     this.retrieveconfigurations()

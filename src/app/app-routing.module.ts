@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {ProductsComponent} from "src/app/components/products/products.component";
 import {ShipmentsComponent} from "src/app/components/shipments/shipments.component";
 import {ToOrderTableComponent} from "src/app/components/to-order-table/to-order-table.component";
-import { OrdersComponent } from './components/orders/products.component';
+import { InvoicesComponent } from './components/invoices/invoices.component';
 import { CartComponent } from './components/cart/cart.component';
 
 const routes: Routes = [
@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'to-orders', component: ToOrderTableComponent },
   { path: 'shipments', component: ShipmentsComponent },
   { path: 'cart', component: CartComponent },
-  { path: 'orders', component: OrdersComponent }
+  { path: 'invoices', component: InvoicesComponent }
 ];
 
 @NgModule({

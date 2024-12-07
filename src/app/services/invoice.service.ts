@@ -16,7 +16,7 @@ export type InvoiceData = BaseInvoiceInfo
 @Injectable({
   providedIn: 'root'
 })
-export class CheckoutService {
+export class InvoiceService {
   private dbPath = '/invoices';
 
   checkoutRef: AngularFirestoreCollection<InvoiceData>;

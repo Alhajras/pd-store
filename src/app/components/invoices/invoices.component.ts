@@ -4,7 +4,7 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {ProductService} from "src/app/services/product.service";
+import {InvoiceData, InvoiceService} from "src/app/services/invoice.service";
 import {finalize, map} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
@@ -45,15 +45,16 @@ export type OrderData = BaseOrderInfo
  * @title Data table with sorting, pagination, and filtering.
  */
 @Component({
-  selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.css'],
+  selector: 'app-invoices',
+  templateUrl: './invoices.component.html',
+  styleUrls: ['./invoices.component.css'],
   standalone: true,
   imports:[NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
-export class OrdersComponent implements OnChanges{
-  displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'notes', 'status', 'actions'];
-  dataSource!: MatTableDataSource<ToOrder>;
+export class InvoicesComponent implements OnChanges{
+  displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'actions'];
+  dataSource!: MatTableDataSource<InvoiceData>;
+ 
   orderData: OrderData = {
     name: '',
     price: 0,
@@ -82,7 +83,7 @@ export class OrdersComponent implements OnChanges{
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
 
-  constructor(private productService: ProductService,
+  constructor(private invoiceService: InvoiceService,
               public dialog: MatDialog,
               private shipmentService: ShipmentService,
               private storage: AngularFireStorage,
@@ -162,7 +163,7 @@ export class OrdersComponent implements OnChanges{
 
   confirmDelete() {
     if (this.orderToDelete !== null) {
-      this.productService.delete(this.orderToDelete.id).then(() => {
+      this.invoiceService.delete(this.orderToDelete.id).then(() => {
         this.overlayRef?.dispose();
       });
     }
@@ -187,36 +188,11 @@ export class OrdersComponent implements OnChanges{
 
   editOrder(): void {
     if (this.orderToEditId !== null) {
-      this.productService.update(this.orderToEditId, this.orderData).then(() => {
+      this.invoiceService.update(this.orderToEditId, this.orderData).then(() => {
         this.orderToEditId = null
         this.dialog.closeAll()
       });
     }
-  }
-
-  onAdd(): void {
-    if (this.orderToEditId === null) {
-      this.orderData.createdTime = new Date().toString()
-      this.productService.create(this.orderData).then(() => {
-        this.dialog.closeAll()
-      });
-    } else {
-      this.editOrder()
-    }
-    this.orderData = {
-      name: '',
-      price: 0,
-      sellPrice: 0,
-      quantity: 1,
-      link: '',
-      barcode: '',
-      pdLink: '',
-      variant: '',
-      notes: '',
-      image: '',
-      status: 'new',
-      createdTime: ''
-    };
   }
 
   onCancel(): void {
@@ -233,25 +209,13 @@ export class OrdersComponent implements OnChanges{
   }
 
   public retrieveOrders(): void {
-      this.productService.getAll().snapshotChanges().pipe(
+      this.invoiceService.getAll().snapshotChanges().pipe(
         map(changes =>
           changes.map(c =>
-            ({...c.payload.doc.data(), id: c.payload.doc.id})
+            ({...c.payload.doc.data()})
           )
         )
       ).subscribe(data => {
-            if (this.docsIds !== undefined) {
-              let docs = this.docsIds.map(doc=>doc.orderId) as string[]
-              data = data.filter(d=>docs.findIndex(doc=> doc === d.id) !== -1)
-
-              this.docsIds.forEach(doc => {
-                const order = data.find(item => item.id === doc.orderId);
-                if (order) {
-                  order.quantity = doc.quantity;
-                }
-              });
-
-            }
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -289,7 +253,6 @@ export class OrdersComponent implements OnChanges{
     this.orderData = order
     this.orderData.status = newStatus
     this.orderToEditId = order.id
-    this.onAdd()
   }
 
   moveTheOrderToShipment(): void {
