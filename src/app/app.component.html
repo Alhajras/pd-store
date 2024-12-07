@@ -11,10 +11,13 @@
       <li class="nav-item">
         <a routerLink="shipments" class="nav-link">Shipments</a>
       </li>
-      <input min="0" *ngIf="config" type="number" (input)="updateConfig()" [(ngModel)]="config.conversionPrice"/>
+      <mat-form-field class="example-full-width">
+        <input matInput min="0" *ngIf="config" type="number" (input)="updateConfig()" [(ngModel)]="config.conversionPrice"/>
+      </mat-form-field>
+  
     </div>
   </nav>
-
+  
   <div class="ml-3 mr-3 mt-3">
     <router-outlet></router-outlet>
   </div>
