@@ -53,7 +53,7 @@ export type OrderData = BaseOrderInfo
   imports:[NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ProductsComponent implements OnChanges{
-  displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'notes', 'status', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {
     name: '',

@@ -18,6 +18,8 @@ import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
+import { BaseOrderInfo, ToOrder } from '../to-order-table/to-order-table.component';
+import {MatCardModule} from '@angular/material/card';
 
 /**
  * @title Data table with sorting, pagination, and filtering.
@@ -27,12 +29,18 @@ import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.css'],
   standalone: true,
-  imports:[NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[MatCardModule, NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class InvoicesComponent implements OnChanges{
   displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'actions'];
   dataSource!: MatTableDataSource<Invoice>;
- 
+  ordersDisplayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
+
+  ordersTable!: MatTableDataSource<BaseOrderInfo>;
+  protected invoiceToView!:  Invoice
+  public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
+  protected totlaPriceToPay = 0
+  protected totalProducts = 0
   invoiceData: InvoiceData = {
     address: '',
     phoneNumber: '',
@@ -49,9 +57,10 @@ export class InvoicesComponent implements OnChanges{
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
   public invoiceToEditId: string | null = null;
   public config : Configurations = {conversionPrice: 0}
-
+  protected showTable: boolean = true 
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
+  protected orders: BaseOrderInfo[] = []
 
   constructor(private invoiceService: InvoiceService,
               public dialog: MatDialog,
@@ -181,6 +190,27 @@ export class InvoicesComponent implements OnChanges{
   //   this.orderToEditId = order.id
   // }
 
+  protected displayTable(){
+    this.showTable = true
+  }
+
+  protected hideTable( row: Invoice){
+    this.invoiceToView = row
+    this.ordersTable = new MatTableDataSource(this.invoiceToView.orders);
+    this.ordersTable.sort = this.sort;
+    this.totlaPriceToPay = 0
+    this.totalProducts = 0
+
+    this.invoiceToView.orders.forEach(o=>{
+      this.totalProducts += 1
+      let sellPrice =  o.sellPrice * this.config.conversionPrice
+      if (sellPrice > 0)
+{
+  sellPrice = new RoundUpToFivePipe().transform(sellPrice)
+  this.totlaPriceToPay += sellPrice}
+    })
+    this.showTable = false
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ('docsIds' in changes) {

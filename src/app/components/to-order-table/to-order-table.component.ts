@@ -18,7 +18,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { ProductService } from 'src/app/services/product.service';
 
-interface BaseOrderInfo {
+export interface BaseOrderInfo {
   name: string;
   price: number;
   sellPrice: number;
