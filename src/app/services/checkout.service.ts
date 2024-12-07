@@ -1,29 +1,39 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import {Observable} from "rxjs";
 import { OrderData } from '../components/to-order-table/to-order-table.component';
+
+interface BaseInvoiceInfo {
+  name: string,
+  address: string,
+  phoneNumber: string,
+  notes: string,
+  createdTime: string,
+  orders: OrderData[]
+}
+
+export type InvoiceData = BaseInvoiceInfo
 
 @Injectable({
   providedIn: 'root'
 })
 export class CheckoutService {
-  private dbPath = '/checkout';
+  private dbPath = '/invoices';
 
-  checkoutRef: AngularFirestoreCollection<OrderData>;
+  checkoutRef: AngularFirestoreCollection<InvoiceData>;
 
   constructor(private db: AngularFirestore) {
     this.checkoutRef = db.collection(this.dbPath);
   }
 
-  getAll(): AngularFirestoreCollection<OrderData> {
+  getAll(): AngularFirestoreCollection<InvoiceData> {
     return this.checkoutRef;
   }
 
-  create(tutorial: OrderData): any {
+  create(tutorial: InvoiceData): any {
     return this.checkoutRef.add({ ...tutorial });
   }
 
-  update(id: string, data: Partial<OrderData>): Promise<void> {
+  update(id: string, data: Partial<InvoiceData>): Promise<void> {
     return this.checkoutRef.doc(id).update(data);
   }
 

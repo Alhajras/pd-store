@@ -19,6 +19,7 @@ import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { CartService } from 'src/app/services/cart.service';
+import { CheckoutService, InvoiceData } from 'src/app/services/checkout.service';
 
 interface BaseOrderInfo {
   name: string;
@@ -55,6 +56,15 @@ export type OrderData = BaseOrderInfo
 export class CartComponent {
   displayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
+  invoiceData: InvoiceData = {
+    name: '',
+    address: '',
+    phoneNumber: '',
+    notes: '',
+    createdTime: '',
+    orders: []
+  }
+
   orderData: OrderData = {
     name: '',
     price: 0,
@@ -76,8 +86,6 @@ export class CartComponent {
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
   public orderToEditId: string | null = null;
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
-  public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
-  public shipments: Shipment[] = []
   public config : Configurations = {conversionPrice: 0}
   public cart: OrderData[] = []
 
@@ -86,12 +94,12 @@ export class CartComponent {
 
   constructor(
               public dialog: MatDialog,
-              private shipmentService: ShipmentService,
               private storage: AngularFireStorage,
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
               private readonly configService: ConfigurationsService,
               private readonly cartService: CartService,
+              private readonly checkoutService: CheckoutService
   ) {
     this.retrieveCart()
     this.retrieveconfigurations()
@@ -101,7 +109,7 @@ export class CartComponent {
     this.cartService.getAll().snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+          ({ ...c.payload.doc.data(), id: c.payload.doc.id})
         )
       )
     ).subscribe(data => {
@@ -142,11 +150,6 @@ export class CartComponent {
       .subscribe();
   }
 
-  public addToCart (row: ToOrder){
-    this.cartService.create(row).then(() => {
-      this.dialog.closeAll()
-    });
-  }
   openDeleteConfirmation(event: MouseEvent, row: ToOrder) {
     // If an overlay is already open, close it
     if (this.overlayRef) {
@@ -197,7 +200,7 @@ export class CartComponent {
   openDialog(templateRef: TemplateRef<any>): void {
     const dialogRef = this.dialog.open(templateRef, {
       width: '50rem',
-      data: {...this.orderData},
+      data: {...this.invoiceData},
     });
 
     dialogRef.afterClosed().subscribe((result: OrderData | undefined) => {
@@ -216,6 +219,21 @@ export class CartComponent {
     }
   }
 
+  clearCart(){
+    this.dataSource.data.forEach(order =>{
+      this.cartService.delete(order.id).then(() => {});
+    })
+
+  }
+  createInvoice(){
+    this.invoiceData.createdTime = new Date().toString()
+    this.invoiceData.orders = this.dataSource.data
+    this.checkoutService.create(this.invoiceData).then(() => {
+      this.clearCart()
+      this.dialog.closeAll()
+    });
+
+  }
   onAdd(): void {
     if (this.orderToEditId === null) {
       this.orderData.createdTime = new Date().toString()
@@ -260,61 +278,11 @@ export class CartComponent {
     this.openDialog(dialogTemplate)
   }
 
-  openMoveToDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
-    this.retrieveShipments()
-    this.moveTo.maxQuantity = row.quantity
-    this.moveTo.orderId = row.id
-    this.orderData = row
-    this.orderToEditId = row.id
-    this.openDialog(dialogTemplate)
-  }
-
-  public retrieveShipments(): void {
-    this.shipmentService.getAll().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
-        )
-      )
-    ).subscribe(data => {
-      this.shipments = data
-    });
-  }
-
   changeOrderStatus(newStatus: any, order: ToOrder) {
     this.orderData = order
     this.orderData.status = newStatus
     this.orderToEditId = order.id
     this.onAdd()
-  }
-
-  moveTheOrderToShipment(): void {
-// Find the target shipment
-const shipment = this.shipments.find(s => s.id === this.moveTo.target);
-if (!shipment) return;
-
-// Find the index of the order within the shipment
-const orderIndex = shipment.orders?.findIndex(o => o.orderId === this.moveTo.orderId);
-
-if (orderIndex !== undefined && orderIndex >= 0) {
-  // Update the quantity of the existing order
-  shipment.orders[orderIndex].quantity += this.moveTo.quantity;
-} else {
-  // Add a new order to the shipment
-  shipment.orders = shipment.orders || []; // Ensure orders array is initialized
-  shipment.orders.push({ orderId: this.moveTo.orderId, quantity: this.moveTo.quantity });
-}
-
-// Update the overall order data quantity
-this.orderData.quantity -= this.moveTo.quantity;
-    this.updateShipment(shipment.id, shipment)
-    this.editOrder()
-  }
-
-  updateShipment(id: string, shipment: Shipment): void {
-    this.shipmentService.update(id, shipment).then(() => {
-      console.log('done')
-    });
   }
 }
 
