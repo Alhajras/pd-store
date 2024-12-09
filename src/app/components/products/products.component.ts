@@ -19,6 +19,7 @@ import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { CartService } from 'src/app/services/cart.service';
+import { MatCardModule } from '@angular/material/card';
 
 interface BaseOrderInfo {
   name: string;
@@ -50,7 +51,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
   standalone: true,
-  imports:[NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ProductsComponent implements OnChanges{
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'actions'];
@@ -80,6 +81,8 @@ export class ProductsComponent implements OnChanges{
   public shipments: Shipment[] = []
   public config : Configurations = {conversionPrice: 0}
   public cart: OrderData[] = []
+  protected totalBuyPrice = 0
+  protected totalSellPrice = 0
 
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
@@ -273,6 +276,12 @@ export class ProductsComponent implements OnChanges{
               });
 
             }
+            this.totalBuyPrice = 0
+            this.totalSellPrice = 0
+            data.forEach(p=>{
+              this.totalBuyPrice += p.quantity * p.price
+              this.totalSellPrice += p.quantity * p.sellPrice
+            })
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
