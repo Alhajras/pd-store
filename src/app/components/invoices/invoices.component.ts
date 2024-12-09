@@ -32,7 +32,7 @@ import {MatCardModule} from '@angular/material/card';
   imports:[MatCardModule, NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class InvoicesComponent implements OnChanges{
-  displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'actions'];
+  displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'status', 'actions'];
   dataSource!: MatTableDataSource<Invoice>;
   ordersDisplayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
 

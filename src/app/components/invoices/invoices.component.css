@@ -7,6 +7,22 @@ table {
   width: 100%;
 }
 
+.status-circle {
+  font-size: small;
+  padding-top: 0.75rem;
+}
+
+.draft-circel {
+  color: #f44336;
+}
+
+.delivered-circel {
+  color: #82ff75;
+}
+.ordered-circel {
+  color: #758bff;
+}
+
 .image-preview{
   width: 8rem;
   height: 8rem;
