@@ -18,7 +18,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
-import { BaseOrderInfo, ToOrder } from '../to-order-table/to-order-table.component';
+import { BaseOrderInfo, OrderData, ToOrder } from '../to-order-table/to-order-table.component';
 import {MatCardModule} from '@angular/material/card';
 
 /**
@@ -71,6 +71,7 @@ export class InvoicesComponent implements OnChanges{
     this.retrieveInvoices()
     this.retrieveconfigurations()
   }
+
   public retrieveconfigurations (){
     this.configService.getAll().snapshotChanges().pipe(
       map(changes =>
@@ -80,7 +81,17 @@ export class InvoicesComponent implements OnChanges{
       )
     ).subscribe(data => {
       this.config = data[0]
-    });  }
+    }); 
+   }
+
+    public openDeleteOrderConfirmation(event: MouseEvent, row: OrderData){
+      let updatedOrders = this.ordersTable.data
+      updatedOrders = updatedOrders.filter(o => o != row)
+      this.invoiceToView.orders = updatedOrders
+      this.ordersTable = new MatTableDataSource(updatedOrders);
+      this.updatePrice()
+      this.invoiceService.update(this.invoiceToView.id, this.invoiceToView).then()
+    }
 
   openDeleteConfirmation(event: MouseEvent, row: Invoice) {
     // If an overlay is already open, close it
@@ -194,10 +205,7 @@ export class InvoicesComponent implements OnChanges{
     this.showTable = true
   }
 
-  protected hideTable( row: Invoice){
-    this.invoiceToView = row
-    this.ordersTable = new MatTableDataSource(this.invoiceToView.orders);
-    this.ordersTable.sort = this.sort;
+  private updatePrice(){
     this.totlaPriceToPay = 0
     this.totalProducts = 0
 
@@ -209,6 +217,14 @@ export class InvoicesComponent implements OnChanges{
   sellPrice = new RoundUpToFivePipe().transform(sellPrice)
   this.totlaPriceToPay += sellPrice}
     })
+
+  }
+
+  protected hideTable( row: Invoice){
+    this.invoiceToView = row
+    this.ordersTable = new MatTableDataSource(this.invoiceToView.orders);
+    this.ordersTable.sort = this.sort;
+    this.updatePrice()
     this.showTable = false
   }
 
