@@ -44,6 +44,7 @@ export class InvoicesComponent implements OnChanges{
   invoiceData: InvoiceData = {
     address: '',
     phoneNumber: '',
+    status: '',
     orders: [],
     name: '',
     notes: '',
@@ -83,6 +84,13 @@ export class InvoicesComponent implements OnChanges{
       this.config = data[0]
     }); 
    }
+
+   changeInvoiceStatus(newStatus: any, invoice: Invoice) {
+    this.invoiceData = invoice
+    this.invoiceData.status = newStatus
+    this.invoiceToEditId = invoice.id
+    this.editOrder()
+  }
 
     public openDeleteOrderConfirmation(event: MouseEvent, row: OrderData){
       let updatedOrders = this.ordersTable.data

@@ -61,6 +61,7 @@ export class CartComponent {
     name: '',
     address: '',
     phoneNumber: '',
+    status: 'Draft',
     notes: '',
     createdTime: '',
     orders: []

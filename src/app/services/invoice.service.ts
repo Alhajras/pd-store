@@ -8,7 +8,8 @@ interface BaseInvoiceInfo {
   phoneNumber: string,
   notes: string,
   createdTime: string,
-  orders: OrderData[]
+  orders: OrderData[],
+  status: string
 }
 
 export interface Invoice extends BaseInvoiceInfo {
