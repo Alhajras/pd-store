@@ -87,7 +87,7 @@ export class ProductsComponent implements OnChanges{
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
 
-  constructor(private productService: ProductService,
+  constructor(private readonly  productService: ProductService,
               public dialog: MatDialog,
               private shipmentService: ShipmentService,
               private storage: AngularFireStorage,
@@ -282,6 +282,7 @@ export class ProductsComponent implements OnChanges{
               this.totalBuyPrice += p.quantity * p.price
               this.totalSellPrice += p.quantity * p.sellPrice
             })
+                   
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -358,5 +359,3 @@ this.orderData.quantity -= this.moveTo.quantity;
 
   }
 }
-
-
