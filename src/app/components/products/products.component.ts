@@ -284,6 +284,7 @@ export class ProductsComponent implements OnChanges{
             })
             this.totalBuyPrice = parseFloat(this.totalBuyPrice.toFixed(2));
             this.totalSellPrice = parseFloat(this.totalSellPrice.toFixed(2)); 
+            data.sort((a, b) => a.name.localeCompare(b.name));
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

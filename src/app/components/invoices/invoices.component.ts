@@ -191,7 +191,7 @@ export class InvoicesComponent implements OnChanges{
           )
         )
       ).subscribe(data => {
-        this.dataSource = new MatTableDataSource(data);
+        this.dataSource = new MatTableDataSource(data.sort((b, a) => new Date(a.createdTime).getTime() - new Date(b.createdTime).getTime()));
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
