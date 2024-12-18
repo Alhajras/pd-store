@@ -279,10 +279,11 @@ export class ProductsComponent implements OnChanges{
             this.totalBuyPrice = 0
             this.totalSellPrice = 0
             data.forEach(p=>{
-              this.totalBuyPrice += p.quantity * p.price
-              this.totalSellPrice += p.quantity * p.sellPrice
+              this.totalBuyPrice += (isNaN(p.quantity) ? 0 : p.quantity) * (isNaN(p.price) ? 0 : p.price);
+              this.totalSellPrice += (isNaN(p.quantity) ? 0 : p.quantity)  * (isNaN(p.sellPrice) ? 0 : p.sellPrice);
             })
-                   
+            this.totalBuyPrice = parseFloat(this.totalBuyPrice.toFixed(2));
+            this.totalSellPrice = parseFloat(this.totalSellPrice.toFixed(2)); 
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
