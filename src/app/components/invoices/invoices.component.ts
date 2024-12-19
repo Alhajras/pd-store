@@ -48,6 +48,7 @@ export class InvoicesComponent implements OnChanges{
     orders: [],
     name: '',
     notes: '',
+    locked: false,
     createdTime: ''
   };
 
@@ -56,6 +57,8 @@ export class InvoicesComponent implements OnChanges{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
+  @ViewChild('confirmationLockDialog') confirmationLockDialog!: TemplateRef<any>;
+
   public invoiceToEditId: string | null = null;
   public config : Configurations = {conversionPrice: 0}
   protected showTable: boolean = true 
@@ -136,6 +139,42 @@ export class InvoicesComponent implements OnChanges{
     this.overlayRef.backdropClick().subscribe(() => this.overlayRef?.dispose());
   }
 
+
+  openLockConfirmation(event: MouseEvent, row: Invoice) {
+    // If an overlay is already open, close it
+    if (this.overlayRef) {
+      this.overlayRef.dispose();
+    }
+
+    this.orderToDelete = row
+
+    const positionStrategy = this.overlay.position()
+      .flexibleConnectedTo({x: event.clientX, y: event.clientY})
+      .withPositions([
+        {
+          originX: 'center',
+          originY: 'top',
+          overlayX: 'center',
+          overlayY: 'bottom',
+          offsetY: -10,
+        }
+      ]);
+
+    // Create overlay configuration
+    this.overlayRef = this.overlay.create({
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-dark-backdrop',
+      positionStrategy: positionStrategy
+    });
+
+    // Attach the template portal to the overlay
+    const portal = new TemplatePortal(this.confirmationLockDialog, this.viewContainerRef);
+    this.overlayRef.attach(portal);
+
+    // Close the overlay when backdrop is clicked
+    this.overlayRef.backdropClick().subscribe(() => this.overlayRef?.dispose());
+  }
+
   confirmDelete() {
     if (this.orderToDelete !== null) {
       this.invoiceService.delete(this.orderToDelete.id).then(() => {
@@ -144,6 +183,16 @@ export class InvoicesComponent implements OnChanges{
     }
   }
 
+  confirmLock() {
+    if(this.orderToDelete !== null){
+      this.orderToDelete.locked = true
+    this.invoiceService.update(this.orderToDelete.id, this.orderToDelete).then(() => {
+      this.overlayRef?.dispose();
+    });
+  }
+}
+
+  
   cancelDelete() {
     this.overlayRef?.dispose();
   }

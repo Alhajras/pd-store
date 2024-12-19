@@ -10,6 +10,7 @@ interface BaseInvoiceInfo {
   createdTime: string,
   orders: OrderData[],
   status: string
+  locked: boolean
 }
 
 export interface Invoice extends BaseInvoiceInfo {

@@ -8,6 +8,16 @@
   </div>
 </ng-template>
 
+<!-- Lock confirmation -->
+<ng-template #confirmationLockDialog>
+  <div class="confirmation-container">
+    <p>Are you sure you want to lock the order?</p>
+    <button mat-raised-button color="accent" (click)="cancelDelete()">Cancel</button>
+    <button mat-raised-button color="warn" (click)="confirmLock()">Lock</button>
+  </div>
+</ng-template>
+
+
 <!--Add order dialog-->
 <ng-template #dialogTemplate>
   <h2 mat-dialog-title>Add Order</h2>
@@ -91,7 +101,7 @@
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef> Status</th>
       <td mat-cell *matCellDef="let row">
-        <mat-form-field style="width: 9rem" appearance="outline" class="status-dropdown">
+        <mat-form-field style="width: 9rem" appearance="outline" class="status-dropdown mt-1">
           <mat-select (valueChange)="changeInvoiceStatus($event, row)" [(value)]="row.status">
             <mat-option value="draft">Draft</mat-option>
             <mat-option value="ordered">Ordered</mat-option>
@@ -103,16 +113,19 @@
 
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 17rem"> Actions</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20rem"> Actions</th>
       <td mat-cell *matCellDef="let row">
-        <button mat-raised-button (click)="hideTable(row)" color="accent">
-          View
+        <button [disabled]="row.locked" mat-raised-button (click)="openLockConfirmation($event,row)" color="accent">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="lock_outline"></mat-icon>
+        </button>
+        <button class="ml-1" mat-raised-button (click)="hideTable(row)" color="accent">
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="remove_red_eye"></mat-icon>
         </button>
         <button class="ml-1" mat-raised-button color='primary' (click)="openEditDialog(dialogTemplate,  row)">
-          Edit
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
         </button>
         <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
-          Delete
+          <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
         </button>
       </td>
     </ng-container>

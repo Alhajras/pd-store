@@ -63,6 +63,7 @@ export class CartComponent {
     phoneNumber: '',
     status: 'Draft',
     notes: '',
+    locked: false,
     createdTime: '',
     orders: []
   }
