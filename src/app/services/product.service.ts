@@ -29,4 +29,9 @@ export class ProductService {
   delete(id: string): Promise<void> {
     return this.producstRef.doc(id).delete();
   }
+
+  getProductByBarcode(barcode: string) {
+    return this.db.collection('products', ref => ref.where('barcode', '==', barcode)).get().toPromise();
+  }
+  
 }

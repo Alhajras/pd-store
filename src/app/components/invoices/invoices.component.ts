@@ -1,11 +1,11 @@
-import {Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, inject, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {Invoice, InvoiceData, InvoiceService} from "src/app/services/invoice.service";
-import {finalize, map} from "rxjs";
+import {finalize, lastValueFrom, map} from "rxjs";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
@@ -20,6 +20,8 @@ import { Configurations, ConfigurationsService } from 'src/app/services/configur
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { BaseOrderInfo, OrderData, ToOrder } from '../to-order-table/to-order-table.component';
 import {MatCardModule} from '@angular/material/card';
+import { ProductService } from 'src/app/services/product.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 /**
  * @title Data table with sorting, pagination, and filtering.
@@ -35,6 +37,7 @@ export class InvoicesComponent implements OnChanges{
   displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'status', 'actions'];
   dataSource!: MatTableDataSource<Invoice>;
   ordersDisplayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
+  private _snackBar = inject(MatSnackBar);
 
   ordersTable!: MatTableDataSource<BaseOrderInfo>;
   protected invoiceToView!:  Invoice
@@ -68,6 +71,7 @@ export class InvoicesComponent implements OnChanges{
 
   constructor(private invoiceService: InvoiceService,
               public dialog: MatDialog,
+              private  productService: ProductService,
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
               private readonly configService: ConfigurationsService,
@@ -184,14 +188,59 @@ export class InvoicesComponent implements OnChanges{
   }
 
   confirmLock() {
-    if(this.orderToDelete !== null){
-      this.orderToDelete.locked = true
-    this.invoiceService.update(this.orderToDelete.id, this.orderToDelete).then(() => {
-      this.overlayRef?.dispose();
-    });
-  }
-}
+    if (this.orderToDelete !== null) {
+      // Group orders by barcode
+      const barcodeMap = new Map<string, number>();
+      this.orderToDelete.orders.forEach(o => {
+        if (barcodeMap.has(o.barcode)) {
+          barcodeMap.set(o.barcode, barcodeMap.get(o.barcode)! + 1);
+        } else {
+          barcodeMap.set(o.barcode, 1);
+        }
+      });
+  
+      // Define the type for entries
+      type Entry = [string, number];
+  
+      // Function to update products sequentially
+      const updateSequentially = (entries: Entry[], index = 0): Promise<void> => {
+        if (index >= entries.length) {
+          return Promise.resolve();
+        }
+  
+        const [barcode, quantity] = entries[index];
+        return this.productService.getProductByBarcode(barcode).then(snapshot => {
+          if (snapshot !== undefined && !snapshot.empty) {
+            let product = snapshot.docs[0].data() as ToOrder;
+            product.quantity -= quantity;
+            console.log(product);
+            return this.productService.update(snapshot.docs[0].id, product).then(() => {
+              return updateSequentially(entries, index + 1);
+            });
+          } else {
+            console.log('No product found with the given barcode.');
+            return updateSequentially(entries, index + 1);
+          }
+        }).catch(error => {
+          console.error('Error updating product:', error);
+          return Promise.reject(error);
+        });
+      };
+  
+      // Start the sequential update process
+      updateSequentially(Array.from(barcodeMap.entries())).then(() => {
+        if (this.orderToDelete !== null) {
 
+        this.orderToDelete.locked = true;
+      this.invoiceService.update(this.orderToDelete.id, this.orderToDelete).then(() => {
+        this._snackBar.open(`Order ${this.orderToDelete?.name} is locked!`);
+        this.overlayRef?.dispose();
+      });
+    }
+      });
+   
+    }
+  }
   
   cancelDelete() {
     this.overlayRef?.dispose();

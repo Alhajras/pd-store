@@ -67,7 +67,7 @@ export class ProductsComponent implements OnChanges{
     variant: '',
     notes: '',
     image: '',
-    status: 'new',
+    status: 'draft',
     createdTime: ''
   };
   private overlayRef: OverlayRef | null = null;
