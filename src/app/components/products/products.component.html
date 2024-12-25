@@ -236,7 +236,6 @@
         <button [disabled]="row.quantity <= 0 || (row.quantity - invoices[row.barcode]) <= 0" mat-raised-button class="ml-1" color="accent" (click)="addToCart(row)">
           Add
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="shopping_cart"></mat-icon>
-
         </button>
       </td>
     </ng-container>
