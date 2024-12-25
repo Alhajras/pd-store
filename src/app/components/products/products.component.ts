@@ -20,6 +20,8 @@ import { Configurations, ConfigurationsService } from 'src/app/services/configur
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { CartService } from 'src/app/services/cart.service';
 import { MatCardModule } from '@angular/material/card';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { Invoice, InvoiceService } from 'src/app/services/invoice.service';
 
 interface BaseOrderInfo {
   name: string;
@@ -51,7 +53,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
   standalone: true,
-  imports:[MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ProductsComponent implements OnChanges{
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'actions'];
@@ -83,7 +85,7 @@ export class ProductsComponent implements OnChanges{
   public cart: OrderData[] = []
   protected totalBuyPrice = 0
   protected totalSellPrice = 0
-
+  protected invoices: Record<string, number>  = {}
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
 
@@ -93,13 +95,35 @@ export class ProductsComponent implements OnChanges{
               private storage: AngularFireStorage,
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
+              private invoiceService: InvoiceService,
               private readonly configService: ConfigurationsService,
               private readonly cartService: CartService,
   ) {
+    this.retrieveInvoices()
     this.retrieveOrders()
     this.retrieveconfigurations()
     this.retrieveCart()
   }
+
+  public retrieveInvoices(): void {
+    this.invoiceService.getAll().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+        )
+      )
+    ).subscribe(data => {
+      data.forEach(invoice => {
+        invoice.orders.forEach(order => {
+          if (this.invoices[order.barcode]) {
+            this.invoices[order.barcode] =  this.invoices[order.barcode]  + 1;
+          } else {
+            this.invoices[order.barcode] = 1;
+          }
+        })
+      })
+    });
+}
 
   public retrieveCart (){
     this.cartService.getAll().snapshotChanges().pipe(
