@@ -61,7 +61,7 @@ export class CartComponent {
     name: '',
     address: '',
     phoneNumber: '',
-    status: 'Draft',
+    status: 'draft',
     notes: '',
     locked: false,
     createdTime: '',
