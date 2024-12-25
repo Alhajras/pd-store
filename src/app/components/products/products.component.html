@@ -191,6 +191,8 @@
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 10rem"> Price</th>
       <td mat-cell *matCellDef="let row">
+        <mat-icon matTooltip="No sell price"  *ngIf="row.sellPrice === 0" style="color: #f44336;" aria-hidden="false" aria-label="Example home icon" fontIcon="warning"></mat-icon>
+
         <div class="mr-2" style="font-size: large; color: #f44336;"> {{ row.price }} € </div> <div  class="mr-2" style="font-size: large; color: #82ff75;"> {{ row.sellPrice }} € </div>
         <div style="font-size: large; color: #758bff;"> {{ (row.sellPrice * config.conversionPrice)  | roundUpToFive }} L.D </div>
       </td>
