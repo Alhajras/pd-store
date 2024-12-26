@@ -12,8 +12,9 @@ table {
 }
 
 .image-preview{
-  width: 8rem;
-  height: 8rem;
+  width: 50%;
+  height: 10rem;
+  object-fit:contain
 }
 
 .mat-icon {
