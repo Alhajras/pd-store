@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, inject, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
@@ -22,6 +22,7 @@ import { CartService } from 'src/app/services/cart.service';
 import { MatCardModule } from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { Invoice, InvoiceService } from 'src/app/services/invoice.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface BaseOrderInfo {
   name: string;
@@ -56,6 +57,8 @@ export type OrderData = BaseOrderInfo
   imports:[MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ProductsComponent implements OnChanges{
+  private _snackBar = inject(MatSnackBar);
+
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {
@@ -312,7 +315,25 @@ export class ProductsComponent implements OnChanges{
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.validateProductsBarcodeCollisions(data)
       });
+  }
+  
+  validateProductsBarcodeCollisions(data: ToOrder[]) {
+    let errorMessage = 'The following barcodes are duplicated: ';
+    const barcodeMap = new Map<string, number>();
+    data.forEach(o => {
+      if(o.barcode !== ''){
+      if (barcodeMap.has(o.barcode)) {
+        errorMessage += `${o.barcode}, `;
+      } else {
+        barcodeMap.set(o.barcode, 1);
+      }}
+    });
+
+    if (errorMessage !== 'The following barcodes are duplicated: '){
+    this._snackBar.open(errorMessage, 'Close!');}
+
   }
 
   openEditDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
