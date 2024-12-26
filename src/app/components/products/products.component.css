@@ -7,9 +7,17 @@ table {
   width: 100%;
 }
 
+.upload-button {
+  bottom: 1rem;
+}
+
 .image-preview{
   width: 8rem;
   height: 8rem;
+}
+
+.mat-icon {
+margin-right: 0px !important;
 }
 
 .confirmation-container {

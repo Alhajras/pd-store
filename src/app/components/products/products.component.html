@@ -125,7 +125,10 @@
         <div>
           <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="uploadFile($event, row)"
                  accept=".png, .JPEG"/>
-          <button class="ml-4 mt-1 mb-1" mat-flat-button color="primary" (click)="csvInput.click()">Upload</button>
+          <button class="upload-button" mat-flat-button color="primary" (click)="csvInput.click()">
+            <mat-icon matTooltip="No more quantity left"  aria-hidden="false" aria-label="Example home icon" fontIcon="upload"></mat-icon>
+
+          </button>
         </div>
       </td>
     </ng-container>

@@ -7,6 +7,10 @@ table {
   width: 100%;
 }
 
+.mat-icon {
+  margin-right: 0px !important;
+  }
+  
 .status-circle {
   font-size: small;
   padding-top: 0.75rem;
