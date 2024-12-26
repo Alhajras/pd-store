@@ -236,7 +236,7 @@
         <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
           Delete
         </button>
-        <button [disabled]="row.quantity <= 0 || (row.quantity - invoices[row.barcode]) <= 0" mat-raised-button class="ml-1" color="accent" (click)="addToCart(row)">
+        <button [disabled]="!row.barcode  || row.quantity <= 0 || (row.quantity - invoices[row.barcode]) <= 0" mat-raised-button class="ml-1" color="accent" (click)="addToCart(row)">
           Add
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="shopping_cart"></mat-icon>
         </button>
