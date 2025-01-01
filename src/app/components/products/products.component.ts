@@ -24,6 +24,67 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { Invoice, InvoiceService } from 'src/app/services/invoice.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+export const BRANDS: string[] =  [
+  "Anastasia Beverly Hills",
+  "Balea",
+  "Baylis And Harding",
+  "Benefit",
+  "Calvin Klein",
+  "Carolina Herrera",
+  "CHANEL",
+  "CHARLOTTE TILBURY",
+  "Chloé",
+  "Color WOW",
+  "Dior",
+  "Dolce & Gabbana",
+  "Elie Saab",
+  "essence",
+  "Eucerin",
+  "Eyeliner",
+  "Fenty Beauty",
+  "Giorgio Armani",
+  "Girl Of Now",
+  "GIVENCHY",
+  "Gucci",
+  "Guess",
+  "HUDA BEAUTY",
+  "Jean Paul Gaultier",
+  "Jimmy Choo",
+  "Kiehl's",
+  "Kiko",
+  "KVD",
+  "Lancôme",
+  "LAURA MERCIER",
+  "Lipstick",
+  "L’Occitane",
+  "MAC",
+  "MIELLE ORGANICS",
+  "MORPHE",
+  "Morphe",
+  "Narciso Rodriguez",
+  "NARS",
+  "NYX",
+  "Paco Rabanne",
+  "PAULA'S CHOICE",
+  "Perfume",
+  "Pixi",
+  "Prada",
+  "RARE BEAUTY",
+  "Real Techniques",
+  "Revolution",
+  "Shein",
+  "Sephora",
+  "Sheglam",
+  "SOL DE JANEIRO",
+  "The Ordinary",
+  "Too Faced",
+  "Urban Decay",
+  "Valentino",
+  "VICTORIA'S SECRET",
+  "Versace Bright Crystal",
+  "Yves Saint Laurent"
+];
+
 interface BaseOrderInfo {
   name: string;
   price: number;
@@ -31,6 +92,7 @@ interface BaseOrderInfo {
   quantity: number;
   link: string;
   barcode: string;
+  brand: string;
   variant: string;
   notes: string;
   status: string;
@@ -61,10 +123,12 @@ export class ProductsComponent implements OnChanges{
 
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
+  brands = BRANDS;
   orderData: OrderData = {
     name: '',
     price: 0,
     sellPrice: 0,
+    brand: '',
     quantity: 1,
     link: '',
     pdLink: '',
@@ -260,6 +324,7 @@ export class ProductsComponent implements OnChanges{
       sellPrice: 0,
       quantity: 1,
       link: '',
+      brand: '',
       barcode: '',
       pdLink: '',
       variant: '',
@@ -361,6 +426,13 @@ export class ProductsComponent implements OnChanges{
     ).subscribe(data => {
       this.shipments = data
     });
+  }
+
+  changeOrderBrand(newBrand: any, order: ToOrder) {
+    this.orderData = order
+    this.orderData.brand = newBrand
+    this.orderToEditId = order.id
+    this.onAdd()
   }
 
   changeOrderStatus(newStatus: any, order: ToOrder) {

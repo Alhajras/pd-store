@@ -17,6 +17,7 @@ import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { ProductService } from 'src/app/services/product.service';
+import { BRANDS } from '../products/products.component';
 
 export interface BaseOrderInfo {
   name: string;
@@ -26,6 +27,7 @@ export interface BaseOrderInfo {
   link: string;
   barcode: string;
   variant: string;
+  brand: string;
   notes: string;
   status: string;
   image: string;
@@ -57,6 +59,7 @@ export class ToOrderTableComponent implements OnChanges{
     name: '',
     price: 0,
     sellPrice: 0,
+    brand: '',
     quantity: 1,
     link: '',
     barcode: '',
@@ -76,6 +79,7 @@ export class ToOrderTableComponent implements OnChanges{
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
   public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
   public shipments: Shipment[] = []
+  brands = BRANDS;
 
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
@@ -194,6 +198,7 @@ export class ToOrderTableComponent implements OnChanges{
     this.orderData = {
       name: '',
       price: 0,
+      brand: '',
       sellPrice: 0,
       quantity: 1,
       link: '',

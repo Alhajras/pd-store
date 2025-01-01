@@ -28,6 +28,7 @@ interface BaseOrderInfo {
   sellPrice: number, 
   quantity: number;
   link: string;
+  brand: string;
   barcode: string;
   variant: string;
   notes: string;
@@ -77,6 +78,7 @@ export class CartComponent {
     pdLink: '',
     barcode: '',
     variant: '',
+    brand: '',
     notes: '',
     image: '',
     status: 'new',
@@ -264,6 +266,7 @@ export class CartComponent {
       name: '',
       price: 0,
       sellPrice: 0,
+      brand: '',
       quantity: 1,
       link: '',
       barcode: '',

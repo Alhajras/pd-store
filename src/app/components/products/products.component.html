@@ -86,6 +86,12 @@
       <input matInput [(ngModel)]=" orderData.barcode"/>
     </mat-form-field>
 
+    <mat-form-field  appearance="outline" class="status-dropdown">
+      <mat-select  placeholder="Select brand..."  [(value)]="orderData.brand">
+        <mat-option  *ngFor="let brand of brands" [value]="brand">{{brand}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Notes</mat-label>
         <textarea matInput [(ngModel)]="orderData.notes"></textarea>
@@ -155,14 +161,18 @@
       <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> Name</th>
       <td mat-cell *matCellDef="let row"> <div>
         <mat-icon *ngIf="row.notes" [matTooltip]="row.notes"  aria-hidden="false" aria-label="Example home icon" fontIcon="info"></mat-icon>
-
+        
+        <div style="font-size: large; ">
+        {{ row.brand }}
+      </div>
         {{ row.name  | slice:0:100 }}
         <span *ngIf="row.name.length >= 100">...</span></div>
         <div><b> <small> 
           <mat-icon           matTooltip="Invalid barcode"
           *ngIf="!row.barcode" style="color: #f44336;" aria-hidden="false" aria-label="Example home icon" fontIcon="warning"></mat-icon>
 
-          {{ row.barcode }}</small></b></div></td>
+          {{ row.barcode }}</small></b></div>
+        </td>
     </ng-container>
 
         <!-- Variant Column -->
