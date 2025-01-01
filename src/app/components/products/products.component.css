@@ -12,7 +12,7 @@ table {
 }
 
 .image-preview{
-  width: 50%;
+  width: 30vh;
   background-color: white;
   height: 10rem;
   object-fit:contain
