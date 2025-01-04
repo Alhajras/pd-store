@@ -90,7 +90,9 @@
             <!-- Address Column -->
             <ng-container matColumnDef="createdTime">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Time</th>
-              <td mat-cell *matCellDef="let row"> {{ row.createdTime  | date:'short' }}</td>
+              <td mat-cell *matCellDef="let row"> {{row.createdTime  | timeAgo}} 
+                <div>{{row.createdTime  | date:'short'}}</div>
+              </td>
             </ng-container>
 
             

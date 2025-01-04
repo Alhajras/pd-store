@@ -20,6 +20,7 @@ import { BaseOrderInfo, OrderData, ToOrder } from '../to-order-table/to-order-ta
 import {MatCardModule} from '@angular/material/card';
 import { ProductService } from 'src/app/services/product.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { TimeagoPipe } from 'src/app/pipes/timeago.pipe';
 
 /**
  * @title Data table with sorting, pagination, and filtering.
@@ -29,7 +30,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.css'],
   standalone: true,
-  imports:[MatCardModule, NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[TimeagoPipe, MatCardModule, NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class InvoicesComponent implements OnChanges{
   displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'status', 'actions'];
