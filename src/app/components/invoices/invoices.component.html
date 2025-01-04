@@ -120,7 +120,7 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20rem"> Actions</th>
       <td mat-cell *matCellDef="let row">
-        <button [disabled]="row.locked" mat-raised-button (click)="openLockConfirmation($event,row)" color="accent">
+        <button [disabled]="row.status !== 'delivered' || row.locked" mat-raised-button (click)="openLockConfirmation($event,row)" color="accent">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="lock_outline"></mat-icon>
         </button>
         <button class="ml-1" mat-raised-button (click)="hideTable(row)" color="accent">
