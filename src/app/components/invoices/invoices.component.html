@@ -151,15 +151,11 @@
 
 <mat-card *ngIf="!showTable">
   <mat-card-content>
-  <div style="color: white;"> 
+  <div style="font-size:large; color: white;"> 
     <span class='mr-5'>{{invoiceToView.name}}</span>
     <span class='mr-5' >{{invoiceToView.address}}</span>
     <span  class='mr-5'>{{invoiceToView.phoneNumber}}</span>
-    <span  class='mr-5'>{{invoiceToView.createdTime  | date:'short'}}</span>
-    <span style="float: right;"  class='mr-5'>{{totalProducts}}</span>
-    <span style="font-size:large; float: right;" class='mr-5'>Total Price: {{totlaPriceToPay}} L.D</span>
-
-
+    <span  style="font-size:large; float: right;" class='mr-5'>{{invoiceToView.createdTime  | timeAgo}}</span>
     </div>  
   </mat-card-content>
 </mat-card>
@@ -229,3 +225,11 @@
     <tr mat-row *matRowDef="let row; columns: ordersDisplayedColumns;"></tr>
   </table>
 </div>
+<mat-card *ngIf="!showTable">
+  <mat-card-content>
+  <div style="color: white;"> 
+    <span style="font-size:large; float: right;"  class='mr-5'>Total Items: {{totalProducts}} </span>
+    <span style="font-weight: bold; font-size:large; float: right;" class='mr-5'>Total Price: {{totlaPriceToPay}} L.D</span>
+    </div>  
+  </mat-card-content>
+</mat-card>
