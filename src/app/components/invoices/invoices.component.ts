@@ -21,6 +21,8 @@ import {MatCardModule} from '@angular/material/card';
 import { ProductService } from 'src/app/services/product.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { TimeagoPipe } from 'src/app/pipes/timeago.pipe';
+import {MatListModule, MatListOption, MatSelectionListChange} from '@angular/material/list';
+import {NgFor} from '@angular/common';
 
 /**
  * @title Data table with sorting, pagination, and filtering.
@@ -30,7 +32,7 @@ import { TimeagoPipe } from 'src/app/pipes/timeago.pipe';
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.css'],
   standalone: true,
-  imports:[TimeagoPipe, MatCardModule, NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[NgFor, TimeagoPipe,MatListModule, MatCardModule, NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class InvoicesComponent implements OnChanges{
   displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'status', 'actions'];
@@ -53,6 +55,7 @@ export class InvoicesComponent implements OnChanges{
     locked: false,
     createdTime: ''
   };
+  productCanBeAdded: ToOrder[] = [];
 
   private overlayRef: OverlayRef | null = null;
   private orderToDelete: Invoice | null = null
@@ -77,7 +80,8 @@ export class InvoicesComponent implements OnChanges{
   ) {
     this.retrieveInvoices()
     this.retrieveconfigurations()
-  }
+    this.retrieveOrders()
+      }
 
   public retrieveconfigurations (){
     this.configService.getAll().snapshotChanges().pipe(
@@ -90,6 +94,38 @@ export class InvoicesComponent implements OnChanges{
       this.config = data[0]
     }); 
    }
+
+   public retrieveOrders(): void {
+    this.productService.getAll().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({...c.payload.doc.data(), id: c.payload.doc.id})
+        )
+      )
+    ).subscribe(data => {
+          if (this.docsIds !== undefined) {
+            let docs = this.docsIds.map(doc=>doc.orderId) as string[]
+            data = data.filter(d=>docs.findIndex(doc=> doc === d.id) !== -1)
+
+            this.docsIds.forEach(doc => {
+              const order = data.find(item => item.id === doc.orderId);
+              if (order) {
+                order.quantity = doc.quantity;
+              }
+            });
+
+          }
+          data.sort((a, b) => a.name.localeCompare(b.name));
+          this.productCanBeAdded = data
+    });
+}
+
+addProductsToInvoice(selectedOptions: MatListOption[]) {
+  const selectedProducts = selectedOptions.map(option => option.value); // Extract values from MatListOption
+  this.invoiceData.orders = this.invoiceData.orders.concat(selectedProducts);
+  this.editOrder()
+}
+
 
    changeInvoiceStatus(newStatus: any, invoice: Invoice) {
     this.invoiceData = invoice
@@ -259,6 +295,7 @@ export class InvoicesComponent implements OnChanges{
   }
 
   editOrder(): void {
+    console.log('Editing order:', this.invoiceToEditId);
     if (this.invoiceToEditId !== null) {
       this.invoiceService.update(this.invoiceToEditId, this.invoiceData).then(() => {
         this.invoiceToEditId = null
@@ -300,11 +337,12 @@ export class InvoicesComponent implements OnChanges{
     this.openDialog(dialogTemplate)
   }
   
-  // changeOrderStatus(newStatus: any, order: ToOrder) {
-  //   this.orderData = order
-  //   this.orderData.status = newStatus
-  //   this.orderToEditId = order.id
-  // }
+  openAddToInvoice(dialogTemplate: TemplateRef<any>){
+    this.invoiceToEditId = this.invoiceToView.id
+    this.invoiceData = {...this.invoiceToView} 
+    this.openDialog(dialogTemplate)
+  }
+
 
   protected displayTable(){
     this.showTable = true

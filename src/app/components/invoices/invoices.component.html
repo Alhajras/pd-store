@@ -17,6 +17,32 @@
   </div>
 </ng-template>
 
+<!--Add order dialog-->
+<ng-template #dialogTAddProductToInvoice>
+  <h2 mat-dialog-title>Add product to invoice</h2>
+  <mat-dialog-content>
+  
+    <mat-selection-list #shoes>
+      <mat-list-option *ngFor="let shoe of productCanBeAdded" [value]="shoe">
+       
+        <div>
+        <img class="mr-2 mt-2" height="50rem" width="50rem" [src]="shoe.image  ?  shoe.image : defaultImage"/>
+
+        <span style="font-size: large;">{{ shoe.name }}</span> 
+
+        {{shoe.variant}}
+
+        <span style="font-size: small;"> {{shoe.barcode}}</span>
+      </div>
+      </mat-list-option>
+    </mat-selection-list>
+      </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="addProductsToInvoice(shoes.selectedOptions.selected)"> Add {{shoes.selectedOptions.selected.length}}</button>
+  </mat-dialog-actions>
+</ng-template>
+
 
 <!--Add order dialog-->
 <ng-template #dialogTemplate>
@@ -62,6 +88,10 @@
   <mat-label>Filter</mat-label>
   <input [disabled]='!showTable' matInput (keyup)="applyFilter($event)" placeholder="Ex. perfume" #input>
 </mat-form-field>
+
+<button *ngIf="!showTable" class="mb-1" mat-raised-button color='primary' (click)="openAddToInvoice(dialogTAddProductToInvoice)">
+Add Product
+</button>
 
 <div class="mat-elevation-z8" *ngIf="showTable">
   <table mat-table [dataSource]="dataSource" matSort>
