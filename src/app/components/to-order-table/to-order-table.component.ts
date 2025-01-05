@@ -18,6 +18,8 @@ import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { ProductService } from 'src/app/services/product.service';
 import { BRANDS } from '../products/products.component';
+import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
+import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 
 export interface BaseOrderInfo {
   name: string;
@@ -50,7 +52,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './to-order-table.component.html',
   styleUrls: ['./to-order-table.component.css'],
   standalone: true,
-  imports: [NgIf, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports: [NgIf, RoundUpToFivePipe ,MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ToOrderTableComponent implements OnChanges{
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'notes', 'status', 'actions'];
@@ -80,6 +82,7 @@ export class ToOrderTableComponent implements OnChanges{
   public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
   public shipments: Shipment[] = []
   brands = BRANDS;
+  public config : Configurations = {conversionPrice: 0}
 
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
@@ -87,14 +90,26 @@ export class ToOrderTableComponent implements OnChanges{
   constructor(private tutorialService: TutorialService,
               private productService: ProductService,
               public dialog: MatDialog,
+              private readonly configService: ConfigurationsService,
               private shipmentService: ShipmentService,
               private storage: AngularFireStorage,
               private viewContainerRef: ViewContainerRef,
               private overlay: Overlay,
   ) {
     this.retrieveOrders()
+    this.retrieveconfigurations()
   }
 
+  public retrieveconfigurations (){
+    this.configService.getAll().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+        )
+      )
+    ).subscribe(data => {
+      this.config = data[0]
+    });  }
 
   uploadFile(event: any, row: ToOrder) {
     const file = event.target.files[0];

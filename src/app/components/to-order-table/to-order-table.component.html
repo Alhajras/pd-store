@@ -57,7 +57,7 @@
       </div>
       <div style="width: 10rem"  class="mr-2">
         <mat-form-field appearance="fill">
-          <mat-label>Sell Price €</mat-label>
+          <mat-label>Sell Price € {{ (orderData.sellPrice * config.conversionPrice)  | roundUpToFive }} L.D</mat-label>
           <input matInput type="number" [(ngModel)]="orderData.sellPrice"/>
         </mat-form-field>
       </div>
