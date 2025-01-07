@@ -23,6 +23,7 @@ import { MatCardModule } from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { Invoice, InvoiceService } from 'src/app/services/invoice.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 export const BRANDS: string[] =  [
   "Anastasia Beverly Hills",
@@ -116,7 +117,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
   standalone: true,
-  imports:[MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[MatCheckboxModule, MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ProductsComponent implements OnChanges{
   private _snackBar = inject(MatSnackBar);
