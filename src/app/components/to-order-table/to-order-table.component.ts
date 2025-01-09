@@ -20,6 +20,11 @@ import { ProductService } from 'src/app/services/product.service';
 import { BRANDS } from '../products/products.component';
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {
+  MatSlideToggleModule,
+  _MatSlideToggleRequiredValidatorModule,
+} from '@angular/material/slide-toggle';
 
 export interface BaseOrderInfo {
   name: string;
@@ -32,6 +37,8 @@ export interface BaseOrderInfo {
   brand: string;
   notes: string;
   status: string;
+  published: boolean;
+  madeAd: boolean;
   image: string;
   pdLink: string;
   createdTime: string;
@@ -52,7 +59,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './to-order-table.component.html',
   styleUrls: ['./to-order-table.component.css'],
   standalone: true,
-  imports: [NgIf, RoundUpToFivePipe ,MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports: [MatSlideToggleModule, MatTooltipModule, NgIf, RoundUpToFivePipe ,MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ToOrderTableComponent implements OnChanges{
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'notes', 'status', 'actions'];
@@ -64,6 +71,8 @@ export class ToOrderTableComponent implements OnChanges{
     brand: '',
     quantity: 1,
     link: '',
+    published: false,
+    madeAd: false,  
     barcode: '',
     pdLink: '',
     variant: '',
@@ -214,6 +223,8 @@ export class ToOrderTableComponent implements OnChanges{
       name: '',
       price: 0,
       brand: '',
+      published: false,
+      madeAd: false, 
       sellPrice: 0,
       quantity: 1,
       link: '',

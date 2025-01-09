@@ -34,6 +34,8 @@ interface BaseOrderInfo {
   notes: string;
   status: string;
   image: string;
+  published: boolean;
+  madeAd: boolean;
   pdLink: string;
   createdTime: string;
 }
@@ -78,6 +80,8 @@ export class CartComponent {
     pdLink: '',
     barcode: '',
     variant: '',
+    published: false,
+    madeAd: false,  
     brand: '',
     notes: '',
     image: '',
@@ -270,6 +274,8 @@ export class CartComponent {
       quantity: 1,
       link: '',
       barcode: '',
+      published: false,
+      madeAd: false,    
       pdLink: '',
       variant: '',
       notes: '',

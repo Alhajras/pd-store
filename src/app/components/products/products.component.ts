@@ -24,6 +24,10 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { Invoice, InvoiceService } from 'src/app/services/invoice.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {
+  MatSlideToggleModule,
+  _MatSlideToggleRequiredValidatorModule,
+} from '@angular/material/slide-toggle';
 
 export const BRANDS: string[] =  [
   "Anastasia Beverly Hills",
@@ -99,6 +103,8 @@ interface BaseOrderInfo {
   status: string;
   image: string;
   pdLink: string;
+  published: boolean;
+  madeAd: boolean;
   createdTime: string;
 }
 
@@ -117,7 +123,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
   standalone: true,
-  imports:[MatCheckboxModule, MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[MatSlideToggleModule, MatCheckboxModule, MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ProductsComponent implements OnChanges{
   private _snackBar = inject(MatSnackBar);
@@ -132,6 +138,8 @@ export class ProductsComponent implements OnChanges{
     brand: '',
     quantity: 1,
     link: '',
+    published: false,
+    madeAd: false,
     pdLink: '',
     barcode: '',
     variant: '',
@@ -172,6 +180,20 @@ export class ProductsComponent implements OnChanges{
     this.retrieveconfigurations()
     this.retrieveCart()
   }
+
+  public updatePublishedCheck(event: any, row: ToOrder) {
+    this.orderData = row
+    this.orderData.published = event.checked
+    this.orderToEditId = row.id
+    this.onAdd()
+  }
+
+  public updateMadeAdCheck(event: any, row: ToOrder) {
+    this.orderData = row
+    this.orderData.madeAd = event.checked
+    this.orderToEditId = row.id
+    this.onAdd()
+      }
 
   public retrieveInvoices(): void {
     this.invoiceService.getAll().snapshotChanges().pipe(
@@ -325,6 +347,8 @@ export class ProductsComponent implements OnChanges{
       sellPrice: 0,
       quantity: 1,
       link: '',
+      published: false,
+      madeAd: false, 
       brand: '',
       barcode: '',
       pdLink: '',
