@@ -128,7 +128,7 @@ export type OrderData = BaseOrderInfo
 export class ProductsComponent implements OnChanges{
   private _snackBar = inject(MatSnackBar);
 
-  displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'pdLink', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   brands = BRANDS;
   orderData: OrderData = {
