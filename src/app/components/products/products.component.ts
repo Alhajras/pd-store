@@ -127,7 +127,7 @@ export type OrderData = BaseOrderInfo
 })
 export class ProductsComponent implements OnChanges{
   private _snackBar = inject(MatSnackBar);
-
+  public savingInProgress = false
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
   brands = BRANDS;
@@ -327,16 +327,19 @@ export class ProductsComponent implements OnChanges{
     if (this.orderToEditId !== null) {
       this.productService.update(this.orderToEditId, this.orderData).then(() => {
         this.orderToEditId = null
+        this.savingInProgress = false
         this.dialog.closeAll()
       });
     }
   }
 
   onAdd(): void {
+    this.savingInProgress = true
     if (this.orderToEditId === null) {
       this.orderData.createdTime = new Date().toString()
       this.productService.create(this.orderData).then(() => {
         this.dialog.closeAll()
+        this.savingInProgress = false
       });
     } else {
       this.editOrder()
