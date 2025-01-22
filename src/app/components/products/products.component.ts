@@ -28,6 +28,7 @@ import {
   MatSlideToggleModule,
   _MatSlideToggleRequiredValidatorModule,
 } from '@angular/material/slide-toggle';
+import { DateToDaysPipe } from 'src/app/pipes/datetodays.pipe';
 
 export const BRANDS: string[] =  [
   "Anastasia Beverly Hills",
@@ -123,7 +124,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
   standalone: true,
-  imports:[MatSlideToggleModule, MatCheckboxModule, MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports:[DateToDaysPipe, MatSlideToggleModule, MatCheckboxModule, MatTooltipModule, MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class ProductsComponent implements OnChanges{
   private _snackBar = inject(MatSnackBar);
