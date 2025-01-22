@@ -203,7 +203,10 @@ export class ProductsComponent implements OnChanges{
         )
       )
     ).subscribe(data => {
-      data.filter(invoice=>!invoice.locked).forEach(invoice => {
+      this.invoices = {}
+      data.filter(invoice=>!invoice.locked).
+      filter(invoice=> invoice.status !== 'draft').
+      forEach(invoice => {
         invoice.orders.forEach(order => {
           if (this.invoices[order.barcode]) {
             this.invoices[order.barcode] =  this.invoices[order.barcode]  + 1;
