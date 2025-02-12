@@ -5,6 +5,7 @@ import {ShipmentsComponent} from "src/app/components/shipments/shipments.compone
 import {ToOrderTableComponent} from "src/app/components/to-order-table/to-order-table.component";
 import { InvoicesComponent } from './components/invoices/invoices.component';
 import { CartComponent } from './components/cart/cart.component';
+import { AnalyticsComponent } from './components/analytics/analytics.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -12,7 +13,9 @@ const routes: Routes = [
   { path: 'to-orders', component: ToOrderTableComponent },
   { path: 'shipments', component: ShipmentsComponent },
   { path: 'cart', component: CartComponent },
-  { path: 'invoices', component: InvoicesComponent }
+  { path: 'invoices', component: InvoicesComponent },
+  { path: 'analytics', component: AnalyticsComponent }
+
 ];
 
 @NgModule({
