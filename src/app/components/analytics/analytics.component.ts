@@ -3,6 +3,7 @@ import { Chart, ChartData, ChartItem, ChartOptions } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { map } from 'rxjs';
 import { InvoiceService } from 'src/app/services/invoice.service';
+import { TrelloService } from 'src/app/services/trello.service';
 
 @Component({
   selector: 'app-analytics',

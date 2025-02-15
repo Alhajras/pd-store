@@ -1,31 +1,32 @@
-import {Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {ProductService} from "src/app/services/product.service";
-import {finalize, map} from "rxjs";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {MatButtonModule} from "@angular/material/button";
-import {FormsModule} from "@angular/forms";
-import {Overlay, OverlayRef} from "@angular/cdk/overlay";
-import {TemplatePortal} from "@angular/cdk/portal";
-import {MatIconModule} from "@angular/material/icon";
-import {NgForOf, SlicePipe, NgIf} from "@angular/common";
-import {AngularFireStorage} from "@angular/fire/compat/storage";
-import {MatSelectModule} from "@angular/material/select";
-import {Shipment, ShipmentService} from "src/app/services/shipment.service";
+import { Component, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ProductService } from "src/app/services/product.service";
+import { finalize, map } from "rxjs";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
+import { FormsModule } from "@angular/forms";
+import { Overlay, OverlayRef } from "@angular/cdk/overlay";
+import { TemplatePortal } from "@angular/cdk/portal";
+import { MatIconModule } from "@angular/material/icon";
+import { NgForOf, SlicePipe, NgIf } from "@angular/common";
+import { AngularFireStorage } from "@angular/fire/compat/storage";
+import { MatSelectModule } from "@angular/material/select";
+import { Shipment, ShipmentService } from "src/app/services/shipment.service";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { CartService } from 'src/app/services/cart.service';
 import { InvoiceService, InvoiceData } from 'src/app/services/invoice.service';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
+import { TrelloService } from 'src/app/services/trello.service';
 
 interface BaseOrderInfo {
   name: string;
   price: number;
-  sellPrice: number, 
+  sellPrice: number,
   quantity: number;
   link: string;
   brand: string;
@@ -55,7 +56,7 @@ export type OrderData = BaseOrderInfo
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
   standalone: true,
-  imports:[MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports: [MatCardModule, NgIf, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
 export class CartComponent {
   displayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
@@ -81,7 +82,7 @@ export class CartComponent {
     barcode: '',
     variant: '',
     published: false,
-    madeAd: false,  
+    madeAd: false,
     brand: '',
     notes: '',
     image: '',
@@ -95,31 +96,32 @@ export class CartComponent {
   @ViewChild('confirmationDialog') confirmationDialog!: TemplateRef<any>;
   public orderToEditId: string | null = null;
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
-  public config : Configurations = {conversionPrice: 0}
+  public config: Configurations = { conversionPrice: 0 }
   public cart: OrderData[] = []
   protected totlaPriceToPay = 0
   protected totalProducts = 0
 
   @Input()
-  docsIds!: {orderId: string, quantity: number}[]
+  docsIds!: { orderId: string, quantity: number }[]
 
   constructor(
-              public dialog: MatDialog,
-              private storage: AngularFireStorage,
-              private viewContainerRef: ViewContainerRef,
-              private overlay: Overlay,
-              private readonly configService: ConfigurationsService,
-              private readonly cartService: CartService,
-              private readonly checkoutService: InvoiceService
+    private readonly trelloService: TrelloService,
+    public dialog: MatDialog,
+    private storage: AngularFireStorage,
+    private viewContainerRef: ViewContainerRef,
+    private overlay: Overlay,
+    private readonly configService: ConfigurationsService,
+    private readonly cartService: CartService,
+    private readonly checkoutService: InvoiceService
   ) {
     this.retrieveconfigurations()
   }
 
-  public retrieveCart (){
+  public retrieveCart() {
     this.cartService.getAll().snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>
-          ({ ...c.payload.doc.data(), id: c.payload.doc.id})
+          ({ ...c.payload.doc.data(), id: c.payload.doc.id })
         )
       )
     ).subscribe(data => {
@@ -128,29 +130,31 @@ export class CartComponent {
       this.dataSource.sort = this.sort;
 
       this.totlaPriceToPay = 0
-    this.totalProducts = 0
+      this.totalProducts = 0
 
-    data.forEach(o=>{
-      this.totalProducts += 1
-      let sellPrice =  o.sellPrice * this.config.conversionPrice
-      if (sellPrice > 0)
-{
-  sellPrice = new RoundUpToFivePipe().transform(sellPrice)
-  this.totlaPriceToPay += sellPrice}
-    })
-    });  }
+      data.forEach(o => {
+        this.totalProducts += 1
+        let sellPrice = o.sellPrice * this.config.conversionPrice
+        if (sellPrice > 0) {
+          sellPrice = new RoundUpToFivePipe().transform(sellPrice)
+          this.totlaPriceToPay += sellPrice
+        }
+      })
+    });
+  }
 
-  public retrieveconfigurations (){
+  public retrieveconfigurations() {
     this.configService.getAll().snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
         )
       )
     ).subscribe(data => {
       this.config = data[0]
       this.retrieveCart()
-    });  }
+    });
+  }
 
   uploadFile(event: any, row: ToOrder) {
     const file = event.target.files[0];
@@ -182,7 +186,7 @@ export class CartComponent {
     this.orderToDelete = row
 
     const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo({x: event.clientX, y: event.clientY})
+      .flexibleConnectedTo({ x: event.clientX, y: event.clientY })
       .withPositions([
         {
           originX: 'center',
@@ -223,7 +227,7 @@ export class CartComponent {
   openDialog(templateRef: TemplateRef<any>): void {
     const dialogRef = this.dialog.open(templateRef, {
       width: '50rem',
-      data: {...this.invoiceData},
+      data: { ...this.invoiceData },
     });
 
     dialogRef.afterClosed().subscribe((result: OrderData | undefined) => {
@@ -242,19 +246,34 @@ export class CartComponent {
     }
   }
 
-  clearCart(){
-    this.dataSource.data.forEach(order =>{
-      this.cartService.delete(order.id).then(() => {});
+  clearCart() {
+    this.dataSource.data.forEach(order => {
+      this.cartService.delete(order.id).then(() => { });
     })
 
   }
-  createInvoice(){
+
+  createInvoice() {
     this.invoiceData.createdTime = new Date().toString()
     this.invoiceData.orders = this.dataSource.data
     this.checkoutService.create(this.invoiceData).then(() => {
+      this.addCardToTrello()
       this.clearCart()
       this.dialog.closeAll()
     });
+
+  }
+
+  addCardToTrello() {
+    const listId = '64385c5d6f886e69b69dcf03';
+    const name = `${this.invoiceData.name} - ${this.invoiceData.phoneNumber}`;
+    const description = `- Address: ${this.invoiceData.address} \n- Notes: ${this.invoiceData.notes}`;
+    this.trelloService.addCardToList(listId, name, description)
+      .subscribe(response => {
+        console.log('Card added:', response);
+      }, error => {
+        console.error('Error adding card:', error);
+      });
 
   }
   onAdd(): void {
@@ -275,7 +294,7 @@ export class CartComponent {
       link: '',
       barcode: '',
       published: false,
-      madeAd: false,    
+      madeAd: false,
       pdLink: '',
       variant: '',
       notes: '',
@@ -300,7 +319,7 @@ export class CartComponent {
 
   openEditDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {
     this.orderToEditId = row.id
-    this.orderData = {...row}
+    this.orderData = { ...row }
     this.openDialog(dialogTemplate)
   }
 
