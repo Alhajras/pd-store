@@ -213,7 +213,11 @@
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 10rem"> Price</th>
       <td mat-cell *matCellDef="let row" style="font-size: large;">
-        <span class="mr-2" style="color: #f44336;"> {{ row.price }} € </span> <span style="color: #82ff75;"> {{ row.sellPrice }} € </span></td>
+        <span class="mr-2" style="color: #f44336;"> {{ row.price }} € </span>
+        <span class="mr-2" style="color: #ffffff;"> {{ row.cost }} € </span>
+        <span class="mr-2" style="color: #6b6a6a;"> {{ ordersCostMap[row.barcode] }} € </span>
+        <span style="color: #82ff75;"> {{ row.sellPrice }} € </span>
+      </td>
     </ng-container>            
         
     <!-- Notes Column -->

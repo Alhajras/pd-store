@@ -39,6 +39,7 @@ export class ShipmentsComponent {
     numberOfItems: 1,
     totalPrice: 0,
     notes: '',
+    cost: 0,
     status: 'new',
     createdTime: '',
     orders: [],
@@ -165,6 +166,7 @@ export class ShipmentsComponent {
       image: '',
       aramixId: 0,
       internalId: 0,
+      cost: 0,
       numberOfItems: 1,
       totalPrice: 0,
       notes: '',
@@ -190,6 +192,7 @@ export class ShipmentsComponent {
     this.openDialog(dialogTemplate)
   }
 
+  
   changeOrderStatus(newStatus: any, shipment: Shipment) {
     this.orderData = shipment
     this.orderData.status = newStatus

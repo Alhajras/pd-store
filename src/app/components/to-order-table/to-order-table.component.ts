@@ -97,7 +97,11 @@ export class ToOrderTableComponent implements OnChanges{
   sizes = SIZES;
   brands = BRANDS;
   public config : Configurations = {conversionPrice: 0}
+  public ordersCostMap: Record<string, number> = {};
 
+  // This is used when we want to calculate each order's shipping cost
+  @Input()
+  shipmentCost!: number
   @Input()
   docsIds!: {orderId: string, quantity: number}[]
 
@@ -278,6 +282,7 @@ export class ToOrderTableComponent implements OnChanges{
               });
 
             }
+        this.ordersCostMap =  this.calculateShippingCosts(this.shipmentCost, data)
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -288,6 +293,33 @@ export class ToOrderTableComponent implements OnChanges{
     this.orderToEditId = row.id
     this.orderData = {...row}
     this.openDialog(dialogTemplate)
+  }
+
+
+  calculateShippingCosts(
+    totalShippingCost: number,
+    orders: ToOrder[]
+  ): Record<string, number> {
+    const weightMap = {
+      small: 1,
+      medium: 2,
+      large: 3,
+    };
+  
+    // Calculate total weighted quantity
+    const totalWeight = orders.reduce(
+      (sum, order) => sum + weightMap[order.size] * order.quantity,
+      0
+    );
+  
+    // Distribute shipping cost based on weighted quantity
+    const shippingCosts: Record<string, number> = {};
+    for (const order of orders) {
+      const orderWeight = weightMap[order.size] * order.quantity;
+      shippingCosts[order.barcode] = parseFloat(((orderWeight / totalWeight) * totalShippingCost).toFixed(2));
+    }
+    
+    return shippingCosts;
   }
 
   openMoveToDialog(dialogTemplate: TemplateRef<any>, row: ToOrder) {

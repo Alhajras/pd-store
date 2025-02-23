@@ -22,6 +22,11 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill">
+      <mat-label>Cost</mat-label>
+      <input matInput type="number" [(ngModel)]="orderData.cost"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
       <mat-label>Notes</mat-label>
       <textarea matInput [(ngModel)]="orderData.notes"></textarea>
     </mat-form-field>
@@ -47,7 +52,8 @@
         <span class="mr-5">Aramix ID: {{ row.aramixId }}</span>
         <span class="mr-5">Internal Id: {{ row.internalId }}</span>
         <span class="mr-5">#Items: {{ row.totalOrderQuantity }}</span>
-        <span class="mr-5">Total Price: {{ row.totalShipmentPrice }}</span>
+        <span class="mr-5">Total Price: {{ row.totalShipmentPrice }}  €</span>
+        <span class="mr-5">Ship. Cost: {{ row.cost }} €</span>
         <mat-select (valueChange)="changeOrderStatus($event, row)" [(value)]="row.status">
           <mat-option value="new">New</mat-option>
           <mat-option value="DHL">DHL</mat-option>
@@ -67,7 +73,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <app-to-order-table *ngIf="row.orders.length" [docsIds]="row.orders"></app-to-order-table>
+    <app-to-order-table *ngIf="row.orders.length" [shipmentCost]="row.cost"  [docsIds]="row.orders"></app-to-order-table>
     <div class="mt-5" *ngIf="!row.orders.length"> No orders are added!</div>
   </mat-expansion-panel>
 </mat-accordion>
