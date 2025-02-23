@@ -25,7 +25,9 @@ import { TrelloService } from 'src/app/services/trello.service';
 
 interface BaseOrderInfo {
   name: string;
+  cost: number
   price: number;
+  size: "small" | "medium" | "large";
   sellPrice: number,
   quantity: number;
   link: string;
@@ -74,7 +76,9 @@ export class CartComponent {
 
   orderData: OrderData = {
     name: '',
+    cost: 0,
     price: 0,
+    size: 'small',
     sellPrice: 0,
     quantity: 1,
     link: '',
@@ -267,7 +271,7 @@ export class CartComponent {
   addCardToTrello() {
     const listId = '64385c5d6f886e69b69dcf03';
     const name = `${this.invoiceData.name} - ${this.invoiceData.phoneNumber}`;
-    const description = `- Address: ${this.invoiceData.address} \n- Notes: ${this.invoiceData.notes}`;
+    const description = `- Address: ${this.invoiceData.address} \n- Notes: ${this.invoiceData}`;
     this.trelloService.addCardToList(listId, name, description)
       .subscribe(response => {
         console.log('Card added:', response);
@@ -288,7 +292,9 @@ export class CartComponent {
     this.orderData = {
       name: '',
       price: 0,
+      size: 'small',
       sellPrice: 0,
+      cost: 0, 
       brand: '',
       quantity: 1,
       link: '',

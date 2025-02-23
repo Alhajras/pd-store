@@ -17,7 +17,7 @@ import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {MatSelectModule} from "@angular/material/select";
 import {Shipment, ShipmentService} from "src/app/services/shipment.service";
 import { ProductService } from 'src/app/services/product.service';
-import { BRANDS } from '../products/products.component';
+import { BRANDS, SIZES } from '../products/products.component';
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -30,8 +30,10 @@ export interface BaseOrderInfo {
   name: string;
   price: number;
   sellPrice: number;
+  cost: number;
   quantity: number;
   link: string;
+  size: "small" | "medium" | "large";
   barcode: string;
   variant: string;
   brand: string;
@@ -66,7 +68,9 @@ export class ToOrderTableComponent implements OnChanges{
   dataSource!: MatTableDataSource<ToOrder>;
   orderData: OrderData = {
     name: '',
+    size: 'small',
     price: 0,
+    cost: 0,
     sellPrice: 0,
     brand: '',
     quantity: 1,
@@ -90,6 +94,7 @@ export class ToOrderTableComponent implements OnChanges{
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
   public moveTo = {quantity: 1, orderId: '', target: '', maxQuantity: 1}
   public shipments: Shipment[] = []
+  sizes = SIZES;
   brands = BRANDS;
   public config : Configurations = {conversionPrice: 0}
 
@@ -221,6 +226,8 @@ export class ToOrderTableComponent implements OnChanges{
     }
     this.orderData = {
       name: '',
+      size: 'small',
+      cost: 0,
       price: 0,
       brand: '',
       published: false,

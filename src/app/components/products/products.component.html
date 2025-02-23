@@ -70,6 +70,11 @@
           <input matInput [(ngModel)]=" orderData.barcode"/>
         </mat-form-field>
     
+        <mat-form-field appearance="fill">
+          <mat-label>Ex. Cost</mat-label>
+          <input matInput [(ngModel)]=" orderData.cost"/>
+        </mat-form-field>
+  
       </div>
       <div>
         <mat-form-field appearance="fill">
@@ -92,6 +97,12 @@
           </mat-select>
         </mat-form-field>
     
+        <mat-form-field  appearance="outline" class="status-dropdown">
+          <mat-select  placeholder="Select size..."  [(value)]="orderData.size">
+            <mat-option  *ngFor="let size of sizes" [value]="size">{{size}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
       </div>
     </div>
 
@@ -104,6 +115,7 @@
         <mat-label class="ml-4">Made Ad: </mat-label>
         <mat-slide-toggle [(ngModel)]="orderData.madeAd"></mat-slide-toggle>
       </div>
+
       <mat-form-field appearance="fill">
         <mat-label>Notes</mat-label>
         <textarea matInput [(ngModel)]="orderData.notes"></textarea>

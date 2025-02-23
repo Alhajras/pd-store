@@ -30,6 +30,7 @@ import {
 } from '@angular/material/slide-toggle';
 import { DateToDaysPipe } from 'src/app/pipes/datetodays.pipe';
 
+export const SIZES: string[] = ["small", "medium", "large"];
 export const BRANDS: string[] =  [
   "Anastasia Beverly Hills",
   "Balea",
@@ -94,8 +95,10 @@ export const BRANDS: string[] =  [
 interface BaseOrderInfo {
   name: string;
   price: number;
+  size: "small" | "medium" | "large";
   sellPrice: number, 
   quantity: number;
+  cost: number;
   link: string;
   barcode: string;
   brand: string;
@@ -131,10 +134,13 @@ export class ProductsComponent implements OnChanges{
   public savingInProgress = false
   displayedColumns: string[] = ['image', 'name', 'variant', 'quantity', 'price',  'link', 'actions'];
   dataSource!: MatTableDataSource<ToOrder>;
+  sizes = SIZES;
   brands = BRANDS;
   orderData: OrderData = {
     name: '',
     price: 0,
+    cost: 0,
+    size: "small",
     sellPrice: 0,
     brand: '',
     quantity: 1,
@@ -351,6 +357,8 @@ export class ProductsComponent implements OnChanges{
     this.orderData = {
       name: '',
       price: 0,
+      cost: 0,
+      size: "small",
       sellPrice: 0,
       quantity: 1,
       link: '',
