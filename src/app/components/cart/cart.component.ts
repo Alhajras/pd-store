@@ -62,9 +62,11 @@ export type OrderData = BaseOrderInfo
 })
 export class CartComponent {
   displayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
+  cities: string[] = ['بنغازي', 'طرابلس', 'البيضاء', 'المرج', 'الزاوية', 'الخمس', 'سبها', 'درنة', 'الزنتان'];
   dataSource!: MatTableDataSource<ToOrder>;
   invoiceData: InvoiceData = {
     name: '',
+    city: 'بنغازي',
     address: '',
     phoneNumber: '',
     status: 'draft',
@@ -271,7 +273,7 @@ export class CartComponent {
   addCardToTrello() {
     const listId = '64385c5d6f886e69b69dcf03';
     const name = `${this.invoiceData.name} - ${this.invoiceData.phoneNumber}`;
-    const description = `- Address: ${this.invoiceData.address} \n- Notes: ${this.invoiceData}`;
+    const description = `- City: ${this.invoiceData.city} \n- Address: ${this.invoiceData.address} \n- Notes: ${this.invoiceData.notes}`;
     this.trelloService.addCardToList(listId, name, description)
       .subscribe(response => {
         console.log('Card added:', response);
@@ -294,7 +296,7 @@ export class CartComponent {
       price: 0,
       size: 'small',
       sellPrice: 0,
-      cost: 0, 
+      cost: 0,
       brand: '',
       quantity: 1,
       link: '',

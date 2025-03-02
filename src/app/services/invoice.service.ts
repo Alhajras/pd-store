@@ -5,6 +5,7 @@ import { OrderData } from '../components/to-order-table/to-order-table.component
 interface BaseInvoiceInfo {
   name: string,
   address: string,
+  city: string,
   phoneNumber: string,
   notes: string,
   createdTime: string,

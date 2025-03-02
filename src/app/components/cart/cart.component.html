@@ -34,6 +34,11 @@
           <mat-label>Customer Phone</mat-label>
           <input matInput [(ngModel)]="invoiceData.phoneNumber"/>
         </mat-form-field>
+        <mat-form-field  appearance="outline" class="status-dropdown">
+          <mat-select  placeholder="Select brand..."  [(value)]="invoiceData.city">
+            <mat-option  *ngFor="let city of cities" [value]="city">{{city}}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
     </div>
       <mat-form-field appearance="fill">

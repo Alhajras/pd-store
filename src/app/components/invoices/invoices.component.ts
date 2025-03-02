@@ -47,6 +47,7 @@ export class InvoicesComponent implements OnChanges{
   protected totalProducts = 0
   invoiceData: InvoiceData = {
     address: '',
+    city: '',
     phoneNumber: '',
     status: '',
     orders: [],
