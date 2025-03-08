@@ -366,7 +366,9 @@ addProductsToInvoice(selectedOptions: MatListOption[]) {
 
   protected hideTable( row: Invoice){
     this.invoiceToView = row
-    this.ordersTable = new MatTableDataSource(this.invoiceToView.orders);
+    let orders = this.invoiceToView.orders
+    orders.sort((a, b) => a.name.localeCompare(b.name));
+    this.ordersTable = new MatTableDataSource(orders);
     this.ordersTable.sort = this.sort;
     this.updatePrice()
     this.showTable = false
