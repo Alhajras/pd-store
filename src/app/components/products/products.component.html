@@ -156,9 +156,8 @@
         <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
         <div  *ngIf="(row.createdTime | datetodays ) > 360" style="width: 30vh; border-bottom: 10px solid red;"></div>
         <div   *ngIf="(row.createdTime | datetodays )< 100" style="width: 30vh; border-bottom: 10px solid #17e600;;"></div>
-        <div  *ngIf="(row.createdTime | datetodays) >= 180 && (row.createdTime | datetodays) <= 360"  style="width: 30vh; border-bottom: 10px solid #ffee00;"></div>
+        <div  *ngIf="(row.createdTime | datetodays) >= 100 && (row.createdTime | datetodays) <= 360"  style="width: 30vh; border-bottom: 10px solid #ffee00;"></div>
 
-    
         <div>  
           <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="uploadFile($event, row)"
                  accept=".png, .JPEG"/>
