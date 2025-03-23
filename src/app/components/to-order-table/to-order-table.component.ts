@@ -283,6 +283,8 @@ export class ToOrderTableComponent implements OnChanges{
 
             }
         this.ordersCostMap =  this.calculateShippingCosts(this.shipmentCost, data)
+        data.sort((b, a) => new Date(a.createdTime).getTime() - new Date(b.createdTime).getTime());
+
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
