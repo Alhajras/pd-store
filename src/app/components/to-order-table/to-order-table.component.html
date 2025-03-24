@@ -16,13 +16,13 @@
   <mat-dialog-content>
     <mat-form-field appearance="fill">
       <mat-label>Quantity</mat-label>
-      <input matInput min="1" max="{{moveTo.maxQuantity}}" type="number" [(ngModel)]="moveTo.quantity"/>
+      <input matInput min="1" max="{{moveTo.maxQuantity}}" type="number" [(ngModel)]="moveTo.quantity" />
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Target</mat-label>
       <mat-select [(value)]="moveTo.target">
-        <mat-option  value="All products">
+        <mat-option value="All products">
           All products
         </mat-option>
 
@@ -46,65 +46,66 @@
       <div class="mr-2">
         <mat-form-field appearance="fill">
           <mat-label>Name</mat-label>
-          <input matInput [(ngModel)]="orderData.name"/>
+          <input matInput [(ngModel)]="orderData.name" />
         </mat-form-field>
 
-        <div  class="d-flex">
-          <div style="width: 10rem"  class="mr-2">
-          <mat-form-field appearance="fill">
-            <mat-label>Buy Price €</mat-label>
-            <input matInput type="number" [(ngModel)]="orderData.price"/>
-          </mat-form-field>
+        <div class="d-flex">
+          <div style="width: 10rem" class="mr-2">
+            <mat-form-field appearance="fill">
+              <mat-label>Buy Price €</mat-label>
+              <input matInput type="number" [(ngModel)]="orderData.price" />
+            </mat-form-field>
+          </div>
+          <div style="width: 10rem" class="mr-2">
+            <mat-form-field appearance="fill">
+              <mat-label>Sell Price € {{ (orderData.sellPrice * config.conversionPrice) | roundUpToFive }}
+                L.D</mat-label>
+              <input matInput type="number" [(ngModel)]="orderData.sellPrice" />
+            </mat-form-field>
+          </div>
         </div>
-        <div style="width: 10rem"  class="mr-2">
-          <mat-form-field appearance="fill">
-            <mat-label>Sell Price € {{ (orderData.sellPrice * config.conversionPrice)  | roundUpToFive }} L.D</mat-label>
-            <input matInput type="number" [(ngModel)]="orderData.sellPrice"/>
-          </mat-form-field>
-        </div>
-      </div>
-  
+
         <mat-form-field appearance="fill">
           <mat-label>Link</mat-label>
-          <input matInput [(ngModel)]=" orderData.link"/>
+          <input matInput [(ngModel)]=" orderData.link" />
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>Barcode</mat-label>
-          <input matInput [(ngModel)]=" orderData.barcode"/>
+          <input matInput [(ngModel)]=" orderData.barcode" />
         </mat-form-field>
-    
-            
+
+
         <mat-form-field appearance="fill">
           <mat-label>Ex. Cost</mat-label>
-          <input matInput [(ngModel)]=" orderData.cost"/>
+          <input matInput [(ngModel)]=" orderData.cost" />
         </mat-form-field>
 
       </div>
       <div>
         <mat-form-field appearance="fill">
           <mat-label>Variant</mat-label>
-          <input matInput [(ngModel)]="orderData.variant"/>
+          <input matInput [(ngModel)]="orderData.variant" />
         </mat-form-field>
         <mat-form-field appearance="fill">
           <mat-label>Quantity</mat-label>
-          <input matInput type="number" [(ngModel)]="orderData.quantity"/>
+          <input matInput type="number" [(ngModel)]="orderData.quantity" />
         </mat-form-field>
 
         <mat-form-field appearance="fill">
           <mat-label>PD Link</mat-label>
-          <input matInput [(ngModel)]=" orderData.pdLink"/>
+          <input matInput [(ngModel)]=" orderData.pdLink" />
         </mat-form-field>
 
-        <mat-form-field  appearance="outline" class="status-dropdown">
-          <mat-select  placeholder="Select brand..."  [(value)]="orderData.brand">
-            <mat-option  *ngFor="let brand of brands" [value]="brand">{{brand}}</mat-option>
+        <mat-form-field appearance="outline" class="status-dropdown">
+          <mat-select placeholder="Select brand..." [(value)]="orderData.brand">
+            <mat-option *ngFor="let brand of brands" [value]="brand">{{brand}}</mat-option>
           </mat-select>
         </mat-form-field>
-    
-        <mat-form-field  appearance="outline" class="status-dropdown">
-          <mat-select  placeholder="Select size..."  [(value)]="orderData.size">
-            <mat-option  *ngFor="let size of sizes" [value]="size">{{size}}</mat-option>
+
+        <mat-form-field appearance="outline" class="status-dropdown">
+          <mat-select placeholder="Select size..." [(value)]="orderData.size">
+            <mat-option *ngFor="let size of sizes" [value]="size">{{size}}</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -113,17 +114,17 @@
 
 
     <div class="mb-2">
-    <mat-label>Published: </mat-label>
+      <mat-label>Published: </mat-label>
 
       <mat-slide-toggle [(ngModel)]="orderData.published"></mat-slide-toggle>
 
-        <mat-label class="ml-4">Made Ad: </mat-label>
-        <mat-slide-toggle [(ngModel)]="orderData.madeAd"></mat-slide-toggle>
-      </div>
-      <mat-form-field appearance="fill">
-        <mat-label>Notes</mat-label>
-        <textarea matInput [(ngModel)]="orderData.notes"></textarea>
-      </mat-form-field>
+      <mat-label class="ml-4">Made Ad: </mat-label>
+      <mat-slide-toggle [(ngModel)]="orderData.madeAd"></mat-slide-toggle>
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Notes</mat-label>
+      <textarea matInput [(ngModel)]="orderData.notes"></textarea>
+    </mat-form-field>
 
   </mat-dialog-content>
   <mat-dialog-actions>
@@ -144,13 +145,14 @@
     <ng-container matColumnDef="image">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Image</th>
       <td mat-cell *matCellDef="let row">
-        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
+        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage" />
 
         <div>
           <input #csvInput hidden="true" type="file" onclick="this.value=null" (change)="uploadFile($event, row)"
-                 accept=".png, .JPEG"/>
+            accept=".png, .JPEG" />
           <button class="upload-button" mat-flat-button color="primary" (click)="csvInput.click()">
-            <mat-icon matTooltip="No more quantity left"  aria-hidden="false" aria-label="Example home icon" fontIcon="upload"></mat-icon>
+            <mat-icon matTooltip="No more quantity left" aria-hidden="false" aria-label="Example home icon"
+              fontIcon="upload"></mat-icon>
 
           </button>
         </div>
@@ -171,39 +173,54 @@
         <div style="font-size: large; ">
           {{ row.brand }}
         </div>
-  
-        <div>{{ row.name  | slice:0:100 }}
-        <span *ngIf="row.name.length >= 100">...</span></div>
-        <div><b> <small>{{ row.barcode }}</small></b></div></td>
+
+        <div>{{ row.name | slice:0:100 }}
+          <span *ngIf="row.name.length >= 100">...</span>
+        </div>
+        <div><b> <small>{{ row.barcode }}</small></b></div>
+      </td>
     </ng-container>
-   
+
     <!-- Variant Column -->
-        <ng-container matColumnDef="variant">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant</th>
-          <td mat-cell *matCellDef="let row"> {{ row.variant }}
-            <div>
-              <mat-icon [matTooltip]="row.published ? 'Published':'Not published'"  *ngIf="row.published" style="color: #758bff;" aria-hidden="false" aria-label="Example home icon" fontIcon="remove_red_eye"></mat-icon>
-              <mat-icon matTooltip="No link is provided"  *ngIf="!row.published" style="color: #747474" aria-hidden="false" aria-label="Example home icon" fontIcon="remove_red_eye"></mat-icon>
-    
-              <mat-icon [matTooltip]="row.madeAd ? 'Made an add!':'No ad was made!'"  *ngIf="row.madeAd" style="color: #758bff;" aria-hidden="false" aria-label="Example home icon" fontIcon="public"></mat-icon>
-              <mat-icon matTooltip="No link is provided"  *ngIf="!row.madeAd" style="color: #747474" aria-hidden="false" aria-label="Example home icon" fontIcon="public_off"></mat-icon>
-    </div>
-            </td>
-        </ng-container>
+    <ng-container matColumnDef="variant">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant</th>
+      <td mat-cell *matCellDef="let row"> {{ row.variant }}
+        <div>
+          <mat-icon [matTooltip]="row.published ? 'Published':'Not published'" *ngIf="row.published"
+            style="color: #758bff;" aria-hidden="false" aria-label="Example home icon"
+            fontIcon="remove_red_eye"></mat-icon>
+          <mat-icon matTooltip="No link is provided" *ngIf="!row.published" style="color: #747474" aria-hidden="false"
+            aria-label="Example home icon" fontIcon="remove_red_eye"></mat-icon>
+
+          <mat-icon [matTooltip]="row.madeAd ? 'Made an add!':'No ad was made!'" *ngIf="row.madeAd"
+            style="color: #758bff;" aria-hidden="false" aria-label="Example home icon" fontIcon="public"></mat-icon>
+          <mat-icon matTooltip="No link is provided" *ngIf="!row.madeAd" style="color: #747474" aria-hidden="false"
+            aria-label="Example home icon" fontIcon="public_off"></mat-icon>
+        </div>
+      </td>
+    </ng-container>
 
     <!-- Link Column -->
     <ng-container matColumnDef="link">
       <th mat-header-cell style="width: 10rem" *matHeaderCellDef mat-sort-header> Link</th>
       <td mat-cell *matCellDef="let row">
-        <mat-icon matTooltip="No link is provided"  *ngIf="!row.link" style="color: #f44336;" aria-hidden="false" aria-label="Example home icon" fontIcon="link_off"></mat-icon>
 
-        <a [href]="row.link" target="_blank">        <mat-icon  *ngIf="row.link" style="color: #758bff;" aria-hidden="false" aria-label="Example home icon" fontIcon="attach_money"></mat-icon>
+        <div *ngIf="row.link"> {{ row.link | slice:8:20 }}
+          <span *ngIf="row.link.length >= 20">...</span>
+        </div>
+        <mat-icon matTooltip="No link is provided" *ngIf="!row.link" style="color: #f44336;" aria-hidden="false"
+          aria-label="Example home icon" fontIcon="link_off"></mat-icon>
+
+        <a [href]="row.link" target="_blank"> <mat-icon *ngIf="row.link" style="color: #758bff;" aria-hidden="false"
+            aria-label="Example home icon" fontIcon="attach_money"></mat-icon>
         </a>
 
 
-                <mat-icon class="ml-2" matTooltip="No link is provided"  *ngIf="!row.pdLink" style="color: #f44336;" aria-hidden="false" aria-label="Example home icon" fontIcon="link_off"></mat-icon>
+        <mat-icon class="ml-2" matTooltip="No link is provided" *ngIf="!row.pdLink" style="color: #f44336;"
+          aria-hidden="false" aria-label="Example home icon" fontIcon="link_off"></mat-icon>
 
-        <a class="ml-2" [href]="row.pdLink" target="_blank">        <mat-icon   *ngIf="row.pdLink" style="color: #758bff;" aria-hidden="false" aria-label="Example home icon" fontIcon="store"></mat-icon>
+        <a class="ml-2" [href]="row.pdLink" target="_blank"> <mat-icon *ngIf="row.pdLink" style="color: #758bff;"
+            aria-hidden="false" aria-label="Example home icon" fontIcon="store"></mat-icon>
         </a>
 
       </td>
@@ -212,25 +229,30 @@
 
     <!-- Buy Price Column -->
     <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 10rem"> Price</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10rem"> Price</th>
       <td mat-cell *matCellDef="let row" style="font-size: large;">
         <span class="mr-2" style="color: #f44336;"> {{ row.price }} € </span>
         <span class="mr-2" style="color: #ffffff;"> {{ row.cost }} € </span>
         <span class="mr-2" style="color: #6b6a6a;"> {{ ordersCostMap[row.barcode] / row.quantity }} € </span>
         <span style="color: #82ff75;"> {{ row.sellPrice }} € </span>
       </td>
-    </ng-container>            
-        
+    </ng-container>
+
     <!-- Notes Column -->
     <ng-container matColumnDef="notes">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes</th>
-      <td mat-cell *matCellDef="let row"> 
-        <mat-icon  *ngIf="row.status == 'new'" aria-hidden="false"   style="color: yellow;  padding-top: 0.25rem; padding-right: 0.25rem;" aria-label="Example home icon" fontIcon="star"></mat-icon>
+      <td mat-cell *matCellDef="let row">
+        <mat-icon *ngIf="row.status == 'new'" aria-hidden="false"
+          style="color: yellow;  padding-top: 0.25rem; padding-right: 0.25rem;" aria-label="Example home icon"
+          fontIcon="star"></mat-icon>
 
-        <mat-icon *ngIf="row.status == 'ordered'" aria-hidden="false"  style=" color: #82ff75; padding-top: 0.25rem; padding-right: 0.25rem;"  aria-label="Example home icon" fontIcon="check-square"></mat-icon>
+        <mat-icon *ngIf="row.status == 'ordered'" aria-hidden="false"
+          style=" color: #82ff75; padding-top: 0.25rem; padding-right: 0.25rem;" aria-label="Example home icon"
+          fontIcon="check-square"></mat-icon>
 
 
-        {{ row.notes }}</td>
+        {{ row.notes }}
+      </td>
     </ng-container>
 
     <!-- Status Column -->
@@ -256,7 +278,7 @@
           Edit
         </button>
         <button class="ml-1" mat-raised-button color="primary"
-                (click)="openMoveToDialog(movingOrderDialogTemplate, row)">
+          (click)="openMoveToDialog(movingOrderDialogTemplate, row)">
           Move
         </button>
         <button class="ml-1" mat-raised-button color="warn" (click)="openDeleteConfirmation($event, row)">
@@ -276,4 +298,3 @@
 
   <mat-paginator [pageSizeOptions]="[100]" aria-label="Select page of users"></mat-paginator>
 </div>
-
