@@ -66,6 +66,7 @@ export class CartComponent {
   dataSource!: MatTableDataSource<ToOrder>;
   invoiceData: InvoiceData = {
     name: '',
+    conversionRate: 6.5,
     city: 'بنغازي',
     address: '',
     phoneNumber: '',
@@ -261,6 +262,7 @@ export class CartComponent {
 
   createInvoice() {
     this.invoiceData.createdTime = new Date().toString()
+    this.invoiceData.conversionRate = this.config.conversionPrice
     this.invoiceData.orders = this.dataSource.data
     this.checkoutService.create(this.invoiceData).then(() => {
       this.addCardToTrello()

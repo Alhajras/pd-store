@@ -1,28 +1,28 @@
-import {Component, inject, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {Invoice, InvoiceData, InvoiceService} from "src/app/services/invoice.service";
-import {map} from "rxjs";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {MatButtonModule} from "@angular/material/button";
-import {FormsModule} from "@angular/forms";
-import {Overlay, OverlayRef} from "@angular/cdk/overlay";
-import {TemplatePortal} from "@angular/cdk/portal";
-import {MatIconModule} from "@angular/material/icon";
-import {NgForOf, SlicePipe, NgIf, DatePipe} from "@angular/common";
-import {MatSelectModule} from "@angular/material/select";
+import { Component, inject, Input, OnChanges, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { Invoice, InvoiceData, InvoiceService } from "src/app/services/invoice.service";
+import { map } from "rxjs";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatButtonModule } from "@angular/material/button";
+import { FormsModule } from "@angular/forms";
+import { Overlay, OverlayRef } from "@angular/cdk/overlay";
+import { TemplatePortal } from "@angular/cdk/portal";
+import { MatIconModule } from "@angular/material/icon";
+import { NgForOf, SlicePipe, NgIf, DatePipe } from "@angular/common";
+import { MatSelectModule } from "@angular/material/select";
 import { Configurations, ConfigurationsService } from 'src/app/services/configurations.service';
 import { RoundUpToFivePipe } from 'src/app/pipes/round-up-to-five.pipe';
 import { BaseOrderInfo, OrderData, ToOrder } from '../to-order-table/to-order-table.component';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { ProductService } from 'src/app/services/product.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TimeagoPipe } from 'src/app/pipes/timeago.pipe';
-import {MatListModule, MatListOption, MatSelectionListChange} from '@angular/material/list';
-import {NgFor} from '@angular/common';
+import { MatListModule, MatListOption, MatSelectionListChange } from '@angular/material/list';
+import { NgFor } from '@angular/common';
 
 /**
  * @title Data table with sorting, pagination, and filtering.
@@ -32,22 +32,23 @@ import {NgFor} from '@angular/common';
   templateUrl: './invoices.component.html',
   styleUrls: ['./invoices.component.css'],
   standalone: true,
-  imports:[NgFor, TimeagoPipe,MatListModule, MatCardModule, NgIf,DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
+  imports: [NgFor, TimeagoPipe, MatListModule, MatCardModule, NgIf, DatePipe, RoundUpToFivePipe, MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule, MatButtonModule, MatDialogModule, FormsModule, MatIconModule, SlicePipe, MatSelectModule, NgForOf],
 })
-export class InvoicesComponent implements OnChanges{
-  displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes',  'createdTime', 'status', 'actions'];
+export class InvoicesComponent implements OnChanges {
+  displayedColumns: string[] = ['name', 'address', 'phoneNumber', 'notes', 'createdTime', 'status', 'actions'];
   dataSource!: MatTableDataSource<Invoice>;
   ordersDisplayedColumns: string[] = ['image', 'name', 'variant', 'price', 'actions'];
   private _snackBar = inject(MatSnackBar);
 
   ordersTable!: MatTableDataSource<BaseOrderInfo>;
-  protected invoiceToView!:  Invoice
+  protected invoiceToView!: Invoice
   public defaultImage = "https://firebasestorage.googleapis.com/v0/b/pixie-dus.firebasestorage.app/o/uploads%2F2024-11-03_19-07.png?alt=media&token=da907319-c356-41a7-8ddc-816e2db35313"
   protected totlaPriceToPay = 0
   protected totalProducts = 0
   invoiceData: InvoiceData = {
     address: '',
     city: '',
+    conversionRate: 6.5,
     phoneNumber: '',
     status: '',
     orders: [],
@@ -66,83 +67,83 @@ export class InvoicesComponent implements OnChanges{
   @ViewChild('confirmationLockDialog') confirmationLockDialog!: TemplateRef<any>;
 
   public invoiceToEditId: string | null = null;
-  public config : Configurations = {conversionPrice: 0}
-  protected showTable: boolean = true 
+  public config: Configurations = { conversionPrice: 0 }
+  protected showTable: boolean = true
   @Input()
-  docsIds!: {orderId: string, quantity: number}[]
+  docsIds!: { orderId: string, quantity: number }[]
   protected orders: BaseOrderInfo[] = []
 
   constructor(private invoiceService: InvoiceService,
-              public dialog: MatDialog,
-              private  productService: ProductService,
-              private viewContainerRef: ViewContainerRef,
-              private overlay: Overlay,
-              private readonly configService: ConfigurationsService,
+    public dialog: MatDialog,
+    private productService: ProductService,
+    private viewContainerRef: ViewContainerRef,
+    private overlay: Overlay,
+    private readonly configService: ConfigurationsService,
   ) {
     this.retrieveInvoices()
     this.retrieveconfigurations()
     this.retrieveOrders()
-      }
+  }
 
-  public retrieveconfigurations (){
+  public retrieveconfigurations() {
     this.configService.getAll().snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>
-          ({id: c.payload.doc.id, ...c.payload.doc.data()})
+          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
         )
       )
     ).subscribe(data => {
       this.config = data[0]
-    }); 
-   }
+    });
+  }
 
-   public retrieveOrders(): void {
+  public retrieveOrders(): void {
     this.productService.getAll().snapshotChanges().pipe(
       map(changes =>
         changes.map(c =>
-          ({...c.payload.doc.data(), id: c.payload.doc.id})
+          ({ ...c.payload.doc.data(), id: c.payload.doc.id })
         )
       )
     ).subscribe(data => {
-          if (this.docsIds !== undefined) {
-            let docs = this.docsIds.map(doc=>doc.orderId) as string[]
-            data = data.filter(d=>docs.findIndex(doc=> doc === d.id) !== -1)
+      if (this.docsIds !== undefined) {
+        let docs = this.docsIds.map(doc => doc.orderId) as string[]
+        data = data.filter(d => docs.findIndex(doc => doc === d.id) !== -1)
 
-            this.docsIds.forEach(doc => {
-              const order = data.find(item => item.id === doc.orderId);
-              if (order) {
-                order.quantity = doc.quantity;
-              }
-            });
-
+        this.docsIds.forEach(doc => {
+          const order = data.find(item => item.id === doc.orderId);
+          if (order) {
+            order.quantity = doc.quantity;
           }
-          data.sort((a, b) => a.name.localeCompare(b.name));
-          this.productCanBeAdded = data
+        });
+
+      }
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      this.productCanBeAdded = data
     });
-}
+  }
 
-addProductsToInvoice(selectedOptions: MatListOption[]) {
-  const selectedProducts = selectedOptions.map(option => option.value); // Extract values from MatListOption
-  this.invoiceData.orders = this.invoiceData.orders.concat(selectedProducts);
-  this.editOrder()
-}
+  addProductsToInvoice(selectedOptions: MatListOption[]) {
+    const selectedProducts = selectedOptions.map(option => option.value); // Extract values from MatListOption
+    this.invoiceData.orders = this.invoiceData.orders.concat(selectedProducts);
+    this.editOrder()
+  }
 
 
-   changeInvoiceStatus(newStatus: any, invoice: Invoice) {
+  changeInvoiceStatus(newStatus: any, invoice: Invoice) {
     this.invoiceData = invoice
     this.invoiceData.status = newStatus
     this.invoiceToEditId = invoice.id
     this.editOrder()
   }
 
-    public openDeleteOrderConfirmation(event: MouseEvent, row: OrderData){
-      let updatedOrders = this.ordersTable.data
-      updatedOrders = updatedOrders.filter(o => o != row)
-      this.invoiceToView.orders = updatedOrders
-      this.ordersTable = new MatTableDataSource(updatedOrders);
-      this.updatePrice()
-      this.invoiceService.update(this.invoiceToView.id, this.invoiceToView).then()
-    }
+  public openDeleteOrderConfirmation(event: MouseEvent, row: OrderData) {
+    let updatedOrders = this.ordersTable.data
+    updatedOrders = updatedOrders.filter(o => o != row)
+    this.invoiceToView.orders = updatedOrders
+    this.ordersTable = new MatTableDataSource(updatedOrders);
+    this.updatePrice()
+    this.invoiceService.update(this.invoiceToView.id, this.invoiceToView).then()
+  }
 
   openDeleteConfirmation(event: MouseEvent, row: Invoice) {
     // If an overlay is already open, close it
@@ -153,7 +154,7 @@ addProductsToInvoice(selectedOptions: MatListOption[]) {
     this.orderToDelete = row
 
     const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo({x: event.clientX, y: event.clientY})
+      .flexibleConnectedTo({ x: event.clientX, y: event.clientY })
       .withPositions([
         {
           originX: 'center',
@@ -189,7 +190,7 @@ addProductsToInvoice(selectedOptions: MatListOption[]) {
     this.orderToDelete = row
 
     const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo({x: event.clientX, y: event.clientY})
+      .flexibleConnectedTo({ x: event.clientX, y: event.clientY })
       .withPositions([
         {
           originX: 'center',
@@ -234,16 +235,16 @@ addProductsToInvoice(selectedOptions: MatListOption[]) {
           barcodeMap.set(o.barcode, 1);
         }
       });
-  
+
       // Define the type for entries
       type Entry = [string, number];
-  
+
       // Function to update products sequentially
       const updateSequentially = (entries: Entry[], index = 0): Promise<void> => {
         if (index >= entries.length) {
           return Promise.resolve();
         }
-  
+
         const [barcode, quantity] = entries[index];
         return this.productService.getProductByBarcode(barcode).then(snapshot => {
           if (snapshot !== undefined && !snapshot.empty) {
@@ -262,22 +263,22 @@ addProductsToInvoice(selectedOptions: MatListOption[]) {
           return Promise.reject(error);
         });
       };
-  
+
       // Start the sequential update process
       updateSequentially(Array.from(barcodeMap.entries())).then(() => {
         if (this.orderToDelete !== null) {
 
-        this.orderToDelete.locked = true;
-      this.invoiceService.update(this.orderToDelete.id, this.orderToDelete).then(() => {
-        this._snackBar.open(`Order ${this.orderToDelete?.name} is locked!`);
-        this.overlayRef?.dispose();
+          this.orderToDelete.locked = true;
+          this.invoiceService.update(this.orderToDelete.id, this.orderToDelete).then(() => {
+            this._snackBar.open(`Order ${this.orderToDelete?.name} is locked!`);
+            this.overlayRef?.dispose();
+          });
+        }
       });
-    }
-      });
-   
+
     }
   }
-  
+
   cancelDelete() {
     this.overlayRef?.dispose();
   }
@@ -285,7 +286,7 @@ addProductsToInvoice(selectedOptions: MatListOption[]) {
   openDialog(templateRef: TemplateRef<any>): void {
     const dialogRef = this.dialog.open(templateRef, {
       width: '50rem',
-      data: {...this.invoiceData},
+      data: { ...this.invoiceData },
     });
 
     dialogRef.afterClosed().subscribe((result: InvoiceData | undefined) => {
@@ -319,52 +320,53 @@ addProductsToInvoice(selectedOptions: MatListOption[]) {
   }
 
   public retrieveInvoices(): void {
-      this.invoiceService.getAll().snapshotChanges().pipe(
-        map(changes =>
-          changes.map(c =>
-            ({id: c.payload.doc.id, ...c.payload.doc.data()})
-          )
+    this.invoiceService.getAll().snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
         )
-      ).subscribe(data => {
-        this.dataSource = new MatTableDataSource(data.sort((b, a) => new Date(a.createdTime).getTime() - new Date(b.createdTime).getTime()));
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+      )
+    ).subscribe(data => {
+      this.dataSource = new MatTableDataSource(data.sort((b, a) => new Date(a.createdTime).getTime() - new Date(b.createdTime).getTime()));
+      this.dataSource.paginator = this.paginator;
+      console.log(this.dataSource);
+      this.dataSource.sort = this.sort;
+    });
   }
 
   openEditDialog(dialogTemplate: TemplateRef<any>, row: Invoice) {
     this.invoiceToEditId = row.id
-    this.invoiceData = {...row}
+    this.invoiceData = { ...row }
     this.openDialog(dialogTemplate)
   }
-  
-  openAddToInvoice(dialogTemplate: TemplateRef<any>){
+
+  openAddToInvoice(dialogTemplate: TemplateRef<any>) {
     this.invoiceToEditId = this.invoiceToView.id
-    this.invoiceData = {...this.invoiceToView} 
+    this.invoiceData = { ...this.invoiceToView }
     this.openDialog(dialogTemplate)
   }
 
 
-  protected displayTable(){
+  protected displayTable() {
     this.showTable = true
   }
 
-  private updatePrice(){
+  private updatePrice() {
     this.totlaPriceToPay = 0
     this.totalProducts = 0
 
-    this.invoiceToView.orders.forEach(o=>{
+    this.invoiceToView.orders.forEach(o => {
       this.totalProducts += 1
-      let sellPrice =  o.sellPrice * this.config.conversionPrice
-      if (sellPrice > 0)
-{
-  sellPrice = new RoundUpToFivePipe().transform(sellPrice)
-  this.totlaPriceToPay += sellPrice}
+      let sellPrice = o.sellPrice * this.config.conversionPrice
+      if (sellPrice > 0) {
+        sellPrice = new RoundUpToFivePipe().transform(sellPrice)
+        this.totlaPriceToPay += sellPrice
+      }
     })
 
   }
 
-  protected hideTable( row: Invoice){
+  protected hideTable(row: Invoice) {
     this.invoiceToView = row
     let orders = this.invoiceToView.orders
     orders.sort((a, b) => a.name.localeCompare(b.name));

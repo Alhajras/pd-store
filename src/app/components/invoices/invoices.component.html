@@ -1,4 +1,3 @@
-
 <!-- Delete confirmation -->
 <ng-template #confirmationDialog>
   <div class="confirmation-container">
@@ -21,25 +20,26 @@
 <ng-template #dialogTAddProductToInvoice>
   <h2 mat-dialog-title>Add product to invoice</h2>
   <mat-dialog-content>
-  
+
     <mat-selection-list #shoes>
       <mat-list-option *ngFor="let shoe of productCanBeAdded" [value]="shoe">
-       
+
         <div>
-        <img class="mr-2 mt-2" height="50rem" width="50rem" [src]="shoe.image  ?  shoe.image : defaultImage"/>
+          <img class="mr-2 mt-2" height="50rem" width="50rem" [src]="shoe.image  ?  shoe.image : defaultImage" />
 
-        <span style="font-size: large;">{{ shoe.name }}</span> 
+          <span style="font-size: large;">{{ shoe.name }}</span>
 
-        {{shoe.variant}}
+          {{shoe.variant}}
 
-        <span style="font-size: small;"> {{shoe.barcode}}</span>
-      </div>
+          <span style="font-size: small;"> {{shoe.barcode}}</span>
+        </div>
       </mat-list-option>
     </mat-selection-list>
-      </mat-dialog-content>
+  </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button (click)="onCancel()">Cancel</button>
-    <button mat-button color="primary" (click)="addProductsToInvoice(shoes.selectedOptions.selected)"> Add {{shoes.selectedOptions.selected.length}}</button>
+    <button mat-button color="primary" (click)="addProductsToInvoice(shoes.selectedOptions.selected)"> Add
+      {{shoes.selectedOptions.selected.length}}</button>
   </mat-dialog-actions>
 </ng-template>
 
@@ -52,27 +52,27 @@
       <div class="mr-2">
         <mat-form-field appearance="fill">
           <mat-label>Name</mat-label>
-          <input matInput [(ngModel)]="invoiceData.name"/>
+          <input matInput [(ngModel)]="invoiceData.name" />
         </mat-form-field>
       </div>
       <div>
         <mat-form-field appearance="fill">
           <mat-label>Address</mat-label>
-          <input matInput [(ngModel)]="invoiceData.address"/>
+          <input matInput [(ngModel)]="invoiceData.address" />
         </mat-form-field>
       </div>
     </div>
     <div>
       <mat-form-field appearance="fill">
         <mat-label>Phone</mat-label>
-        <input matInput [(ngModel)]="invoiceData.phoneNumber"/>
+        <input matInput [(ngModel)]="invoiceData.phoneNumber" />
       </mat-form-field>
     </div>
 
-      <mat-form-field style="width: 20rem" appearance="fill">
-        <mat-label>Notes</mat-label>
-        <textarea matInput [(ngModel)]="invoiceData.notes"></textarea>
-      </mat-form-field>
+    <mat-form-field style="width: 20rem" appearance="fill">
+      <mat-label>Notes</mat-label>
+      <textarea matInput [(ngModel)]="invoiceData.notes"></textarea>
+    </mat-form-field>
 
   </mat-dialog-content>
   <mat-dialog-actions>
@@ -81,7 +81,7 @@
   </mat-dialog-actions>
 </ng-template>
 
-<button class="mb-2" mat-raised-button *ngIf="!showTable"  (click)="displayTable()">Back</button>
+<button class="mb-2" mat-raised-button *ngIf="!showTable" (click)="displayTable()">Back</button>
 
 <div *ngIf="!showTable"></div>
 <mat-form-field>
@@ -89,8 +89,9 @@
   <input [disabled]='!showTable' matInput (keyup)="applyFilter($event)" placeholder="Ex. perfume" #input>
 </mat-form-field>
 
-<button *ngIf="!showTable" class="mb-1" mat-raised-button color='primary' (click)="openAddToInvoice(dialogTAddProductToInvoice)">
-Add Product
+<button *ngIf="!showTable" class="mb-1" mat-raised-button color='primary'
+  (click)="openAddToInvoice(dialogTAddProductToInvoice)">
+  Add Product
 </button>
 
 <div class="mat-elevation-z8" *ngIf="showTable">
@@ -98,34 +99,35 @@ Add Product
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
-      <td mat-cell *matCellDef="let row"> 
-                <mat-icon aria-hidden="false"  [class]="row.status + '-circel'"  style="  padding-top: 0.25rem;" aria-label="Example home icon" fontIcon="person"></mat-icon>
+      <td mat-cell *matCellDef="let row">
+        <mat-icon aria-hidden="false" [class]="row.status + '-circel'" style="  padding-top: 0.25rem;"
+          aria-label="Example home icon" fontIcon="person"></mat-icon>
 
-                {{ row.name }}
-    
-    </td>
+        {{ row.name }}
+
+      </td>
     </ng-container>
 
-        <!-- Address Column -->
+    <!-- Address Column -->
     <ng-container matColumnDef="address">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Address</th>
       <td mat-cell *matCellDef="let row"> {{ row.city }} - {{ row.address }}</td>
     </ng-container>
-    
-            <!-- Address Column -->
-            <ng-container matColumnDef="phoneNumber">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number</th>
-              <td mat-cell *matCellDef="let row"> {{ row.phoneNumber }}</td>
-            </ng-container>
-            <!-- Address Column -->
-            <ng-container matColumnDef="createdTime">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Time</th>
-              <td mat-cell *matCellDef="let row"> {{row.createdTime  | timeAgo}} 
-                <div>{{row.createdTime  | date:'short'}}</div>
-              </td>
-            </ng-container>
 
-            
+    <!-- Address Column -->
+    <ng-container matColumnDef="phoneNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone Number</th>
+      <td mat-cell *matCellDef="let row"> {{ row.phoneNumber }}</td>
+    </ng-container>
+    <!-- Address Column -->
+    <ng-container matColumnDef="createdTime">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Time</th>
+      <td mat-cell *matCellDef="let row"> {{row.createdTime | timeAgo}}
+        <div>{{row.createdTime | date:'short'}}</div>
+      </td>
+    </ng-container>
+
+
     <!-- Notes Column -->
     <ng-container matColumnDef="notes">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes</th>
@@ -150,12 +152,13 @@ Add Product
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20rem"> Actions</th>
       <td mat-cell *matCellDef="let row">
-        <button [disabled]="row.status !== 'delivered' || row.locked" mat-raised-button (click)="openLockConfirmation($event,row)" color="accent">
+        <button [disabled]="row.status !== 'delivered' || row.locked" mat-raised-button
+          (click)="openLockConfirmation($event,row)" color="accent">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="lock_outline"></mat-icon>
         </button>
         <button class="ml-1" mat-raised-button (click)="hideTable(row)" color="accent">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="remove_red_eye"></mat-icon>
-        {{row.orders.length}}
+          {{row.orders.length}}
         </button>
         <button class="ml-1" mat-raised-button color='primary' (click)="openEditDialog(dialogTemplate,  row)">
           <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="edit"></mat-icon>
@@ -181,25 +184,25 @@ Add Product
 
 <mat-card *ngIf="!showTable">
   <mat-card-content>
-  <div style="font-size:large; color: white;"> 
-    <span class='mr-5'>{{invoiceToView.name}}</span>
-    <span class='mr-5' >{{invoiceToView.address}}</span>
-    <span  class='mr-5'>{{invoiceToView.phoneNumber}}</span>
-    <span  style="font-size:large; float: right;" class='mr-5'>{{invoiceToView.createdTime  | timeAgo}}</span>
-    </div>  
+    <div style="font-size:large; color: white;">
+      <span class='mr-5'>{{invoiceToView.name}}</span>
+      <span class='mr-5'>{{invoiceToView.address}}</span>
+      <span class='mr-5'>{{invoiceToView.phoneNumber}}</span>
+      <span style="font-size:large; float: right;" class='mr-5'>{{invoiceToView.createdTime | timeAgo}}</span>
+    </div>
   </mat-card-content>
 </mat-card>
 
 <!-- The starting of the orders table -->
 <div class="mat-elevation-z8" *ngIf="!showTable">
-  
+
   <table mat-table [dataSource]="ordersTable" matSort>
-  
+
     <!-- ID Column -->
     <ng-container matColumnDef="image">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Image</th>
       <td mat-cell *matCellDef="let row">
-        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage"/>
+        <img class="image-preview" [src]="row.image  ?  row.image : defaultImage" />
       </td>
     </ng-container>
 
@@ -212,29 +215,31 @@ Add Product
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell style="width: 15rem" *matHeaderCellDef mat-sort-header> Name</th>
-      <td mat-cell *matCellDef="let row"> 
+      <td mat-cell *matCellDef="let row">
         <div style="font-size: large; ">
           {{ row.brand }}
-        </div>  
-        <div>{{ row.name  | slice:0:100 }}
-        <span *ngIf="row.name.length >= 100">...</span></div>
-        <div><b> <small>{{ row.barcode }}</small></b></div></td>
+        </div>
+        <div>{{ row.name | slice:0:100 }}
+          <span *ngIf="row.name.length >= 100">...</span>
+        </div>
+        <div><b> <small>{{ row.barcode }}</small></b></div>
+      </td>
     </ng-container>
 
-        <!-- Variant Column -->
+    <!-- Variant Column -->
     <ng-container matColumnDef="variant">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Variant</th>
       <td mat-cell *matCellDef="let row"> {{ row.variant }}</td>
     </ng-container>
-  
+
     <!-- Buy Price Column -->
     <ng-container matColumnDef="price">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width: 10rem"> Price</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10rem"> Price</th>
       <td mat-cell *matCellDef="let row">
-        <div style="color: #758bff;"> {{ (row.sellPrice * config.conversionPrice)  | roundUpToFive }} L.D </div>
+        <div style="color: #758bff;"> {{ (row.sellPrice * (invoiceToView.conversionRate === undefined ? 6.5:invoiceToView.conversionRate )) | roundUpToFive }} L.D </div>
       </td>
-    </ng-container>            
-    
+    </ng-container>
+
     <!-- Notes Column -->
     <ng-container matColumnDef="notes">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Notes</th>
@@ -257,9 +262,10 @@ Add Product
 </div>
 <mat-card *ngIf="!showTable">
   <mat-card-content>
-  <div style="color: white;"> 
-    <span style="font-size:large; float: right;"  class='mr-5'>Total Items: {{totalProducts}} </span>
-    <span style="font-weight: bold; font-size:large; float: right;" class='mr-5'>Total Price: {{totlaPriceToPay}} L.D</span>
-    </div>  
+    <div style="color: white;">
+      <span style="font-size:large; float: right;" class='mr-5'>Total Items: {{totalProducts}} </span>
+      <span style="font-weight: bold; font-size:large; float: right;" class='mr-5'>Total Price: {{totlaPriceToPay}}
+        L.D</span>
+    </div>
   </mat-card-content>
 </mat-card>

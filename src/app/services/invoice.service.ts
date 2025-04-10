@@ -6,6 +6,7 @@ interface BaseInvoiceInfo {
   name: string,
   address: string,
   city: string,
+  conversionRate: number,
   phoneNumber: string,
   notes: string,
   createdTime: string,
