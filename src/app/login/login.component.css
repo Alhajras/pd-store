@@ -1,0 +1,28 @@
+.login-container {
+  width: 30rem;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  /* Flexbox properties */
+  display: flex;
+  flex-direction: column;
+  /* Stack children vertically */
+  align-items: center;
+  /* Center children horizontally */
+  justify-content: center;
+  /* Center children vertically */
+  background-color: #424242;
+  /* Light background color */
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+
+button {
+  width: 100%;
+  /* Make the button take the full width */
+}
